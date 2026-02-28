@@ -1,0 +1,420 @@
+App.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+App.tsx(1,27): error TS6133: 'useEffect' is declared but its value is never read.
+components/AddEntryModal.tsx(27,7): error TS6133: 'resizeImage' is declared but its value is never read.
+components/AddEntryModal.tsx(59,22): error TS6133: 'setAttachment' is declared but its value is never read.
+components/AddEntryModal.tsx(208,10): error TS6133: 'state' is declared but its value is never read.
+components/AnimalFormModal.tsx(90,10): error TS6133: 'state' is declared but its value is never read.
+components/AnimalProfile.tsx(309,136): error TS2339: Property 'user_initials' does not exist on type 'LogEntry'.
+components/AnimalProfile.tsx(362,136): error TS2339: Property 'user_initials' does not exist on type 'LogEntry'.
+components/AnimalProfile.tsx(389,17): error TS2322: Type 'OrganisationProfile | undefined' is not assignable to type 'OrganisationProfile | null'.
+  Type 'undefined' is not assignable to type 'OrganisationProfile | null'.
+components/AnimalProfile.tsx(407,33): error TS2345: Argument of type 'LogEntry' is not assignable to parameter of type 'string'.
+components/DailyLog.tsx(3,53): error TS6133: 'UserRole' is declared but its value is never read.
+components/DailyRounds.tsx(3,18): error TS6133: 'Incident' is declared but its value is never read.
+components/DailyRounds.tsx(26,57): error TS6133: 'log_entries' is declared but its value is never read.
+components/DailyRounds.tsx(51,57): error TS2304: Cannot find name 'SiteLogEntry'.
+components/DailyRounds.tsx(169,15): error TS6133: 'timestamp' is declared but its value is never read.
+components/Dashboard.tsx(23,14): error TS6133: 'addAnimal' is declared but its value is never read.
+components/Dashboard.tsx(29,9): error TS6133: 'locations' is declared but its value is never read.
+components/DiagnosticOverlay.tsx(4,1): error TS6133: 'useAuthStore' is declared but its value is never read.
+components/DiagnosticOverlay.tsx(7,30): error TS6133: 'DiagnosticIssue' is declared but its value is never read.
+components/DiagnosticOverlay.tsx(8,1): error TS6192: All imports in import declaration are unused.
+components/FirstAid.tsx(3,28): error TS6133: 'User' is declared but its value is never read.
+components/FirstAid.tsx(4,55): error TS6133: 'Calendar' is declared but its value is never read.
+components/FirstAid.tsx(4,73): error TS6133: 'UserIcon' is declared but its value is never read.
+components/FirstAid.tsx(9,11): error TS2339: Property 'firstAidLogs' does not exist on type 'AppContextType'.
+components/FirstAid.tsx(9,25): error TS2339: Property 'addFirstAid' does not exist on type 'AppContextType'.
+components/FirstAid.tsx(9,38): error TS2339: Property 'deleteFirstAid' does not exist on type 'AppContextType'.
+components/FirstAid.tsx(12,22): error TS6133: 'setSearchTerm' is declared but its value is never read.
+components/FirstAid.tsx(15,16): error TS6133: 'setDate' is declared but its value is never read.
+components/FirstAid.tsx(16,16): error TS6133: 'setTime' is declared but its value is never read.
+components/FirstAid.tsx(26,13): error TS2551: Property 'personName' does not exist on type 'FirstAidLogEntry'. Did you mean 'person_name'?
+components/FirstAid.tsx(30,28): error TS2339: Property 'date' does not exist on type 'FirstAidLogEntry'.
+components/FirstAid.tsx(30,49): error TS2339: Property 'date' does not exist on type 'FirstAidLogEntry'.
+components/FirstAid.tsx(32,18): error TS2339: Property 'timestamp' does not exist on type 'FirstAidLogEntry'.
+components/FirstAid.tsx(32,32): error TS2339: Property 'timestamp' does not exist on type 'FirstAidLogEntry'.
+components/FirstAid.tsx(76,43): error TS7006: Parameter 'log' implicitly has an 'any' type.
+components/FlightRecords.tsx(4,33): error TS6133: 'Thermometer' is declared but its value is never read.
+components/FlightRecords.tsx(4,62): error TS6133: 'X' is declared but its value is never read.
+components/FlightRecords.tsx(4,65): error TS6133: 'Maximize2' is declared but its value is never read.
+components/Health.tsx(4,37): error TS6133: 'HealthRecordType' is declared but its value is never read.
+components/Health.tsx(4,88): error TS6133: 'Task' is declared but its value is never read.
+components/Health.tsx(4,94): error TS6133: 'User' is declared but its value is never read.
+components/Health.tsx(4,100): error TS6133: 'UserRole' is declared but its value is never read.
+components/Health.tsx(4,110): error TS6133: 'OrganisationProfile' is declared but its value is never read.
+components/Health.tsx(4,131): error TS6133: 'ShellQuality' is declared but its value is never read.
+components/Health.tsx(5,65): error TS6133: 'Check' is declared but its value is never read.
+components/Health.tsx(21,41): error TS6133: 'addTask' is declared but its value is never read.
+components/Health.tsx(21,50): error TS6133: 'updateTask' is declared but its value is never read.
+components/Health.tsx(21,62): error TS6133: 'deleteTask' is declared but its value is never read.
+components/Health.tsx(21,74): error TS6133: 'users' is declared but its value is never read.
+components/Health.tsx(21,81): error TS6133: 'orgProfile' is declared but its value is never read.
+components/Health.tsx(21,93): error TS2339: Property 'medical_records' does not exist on type 'AppContextType'.
+components/Health.tsx(21,93): error TS6133: 'medical_records' is declared but its value is never read.
+components/Health.tsx(68,37): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Health.tsx(68,63): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Health.tsx(69,35): error TS2353: Object literal may only specify known properties, and 'log_entries' does not exist in type 'Partial<Animal>'.
+components/Health.tsx(78,15): error TS2353: Object literal may only specify known properties, and 'log_entries' does not exist in type 'Partial<Animal>'.
+components/Health.tsx(78,51): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Health.tsx(93,30): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Health.tsx(122,31): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Health.tsx(158,55): error TS2304: Cannot find name 'Pill'.
+components/Health.tsx(159,69): error TS2304: Cannot find name 'Biohazard'.
+components/Health.tsx(184,42): error TS2304: Cannot find name 'ShieldCheck'.
+components/Health.tsx(290,58): error TS2304: Cannot find name 'Edit2'.
+components/Health.tsx(293,58): error TS2304: Cannot find name 'Trash2'.
+components/Health.tsx(296,58): error TS2304: Cannot find name 'ArrowRight'.
+components/Health.tsx(312,28): error TS2552: Cannot find name 'Clock'. Did you mean 'Lock'?
+components/Health.tsx(326,78): error TS2552: Cannot find name 'ClipboardList'. Did you mean 'Clipboard'?
+components/Health.tsx(333,28): error TS2304: Cannot find name 'Biohazard'.
+components/Health.tsx(342,36): error TS2304: Cannot find name 'ArrowRight'.
+components/Health.tsx(346,78): error TS2304: Cannot find name 'ShieldCheck'.
+components/Health.tsx(355,23): error TS2322: Type '{ animals: Animal[]; onUpdateAnimal: (updates: Partial<Animal>) => Promise<void>; currentUser: User | null; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'animals' does not exist on type 'IntrinsicAttributes'.
+components/Health.tsx(363,28): error TS2304: Cannot find name 'Pill'.
+components/Health.tsx(491,51): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Health.tsx(491,67): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Health.tsx(492,50): error TS2353: Object literal may only specify known properties, and 'log_entries' does not exist in type 'Partial<Animal>'.
+components/Health.tsx(511,13): error TS2322: Type '{ isOpen: true; onClose: () => void; onSave: (healthLog: LogEntry, animalId: string, isDeceased: boolean) => void; animals: Animal[]; currentUser: User | null; }' is not assignable to type 'IntrinsicAttributes & MedicalRecordModalProps'.
+  Property 'onSave' does not exist on type 'IntrinsicAttributes & MedicalRecordModalProps'.
+components/Health.tsx(523,63): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Health.tsx(524,50): error TS2353: Object literal may only specify known properties, and 'log_entries' does not exist in type 'Partial<Animal>'.
+components/HelpCenter.tsx(4,31): error TS6133: 'AlertTriangle' is declared but its value is never read.
+components/HelpCenter.tsx(4,68): error TS6133: 'Printer' is declared but its value is never read.
+components/HelpCenter.tsx(5,56): error TS6133: 'UserIcon' is declared but its value is never read.
+components/HelpCenter.tsx(6,27): error TS6133: 'Utensils' is declared but its value is never read.
+components/HelpCenter.tsx(16,9): error TS6133: 'isVolunteer' is declared but its value is never read.
+components/HolidayRegistry.tsx(9,30): error TS2339: Property 'addHoliday' does not exist on type 'AppContextType'.
+components/HolidayRegistry.tsx(9,42): error TS2339: Property 'updateHoliday' does not exist on type 'AppContextType'.
+components/HolidayRegistry.tsx(9,57): error TS2339: Property 'deleteHoliday' does not exist on type 'AppContextType'.
+components/HolidayRegistry.tsx(17,24): error TS18047: 'currentUser' is possibly 'null'.
+components/HolidayRegistry.tsx(17,68): error TS18047: 'currentUser' is possibly 'null'.
+components/HolidayRegistry.tsx(23,65): error TS18047: 'currentUser' is possibly 'null'.
+components/HolidayRegistry.tsx(24,26): error TS18047: 'currentUser' is possibly 'null'.
+components/HolidayRegistry.tsx(30,22): error TS18047: 'currentUser' is possibly 'null'.
+components/HolidayRegistry.tsx(31,24): error TS18047: 'currentUser' is possibly 'null'.
+components/HolidayRegistry.tsx(32,13): error TS2322: Type 'string' is not assignable to type 'Date'.
+components/HolidayRegistry.tsx(33,13): error TS2322: Type 'string' is not assignable to type 'Date'.
+components/HolidayRegistry.tsx(49,26): error TS18047: 'currentUser' is possibly 'null'.
+components/HolidayRegistry.tsx(86,65): error TS18047: 'currentUser' is possibly 'null'.
+components/Incidents.tsx(3,52): error TS6133: 'Animal' is declared but its value is never read.
+components/Incidents.tsx(3,60): error TS6133: 'User' is declared but its value is never read.
+components/Incidents.tsx(4,29): error TS6133: 'Calendar' is declared but its value is never read.
+components/Incidents.tsx(9,22): error TS6133: 'animals' is declared but its value is never read.
+components/Incidents.tsx(9,44): error TS2339: Property 'updateIncident' does not exist on type 'AppContextType'.
+components/Incidents.tsx(9,44): error TS6133: 'updateIncident' is declared but its value is never read.
+components/Incidents.tsx(9,60): error TS2339: Property 'deleteIncident' does not exist on type 'AppContextType'.
+components/Incidents.tsx(12,22): error TS6133: 'setSearchTerm' is declared but its value is never read.
+components/Incidents.tsx(14,26): error TS6133: 'setFilterSeverity' is declared but its value is never read.
+components/Incidents.tsx(31,39): error TS2339: Property 'date' does not exist on type 'Incident'.
+components/Incidents.tsx(31,68): error TS2339: Property 'date' does not exist on type 'Incident'.
+components/Incidents.tsx(40,11): error TS2353: Object literal may only specify known properties, and 'date' does not exist in type 'Omit<Incident, "id" | "updated_at" | "created_at" | "created_by" | "last_modified_by" | "reported_by_user_id">'.
+components/Incidents.tsx(88,110): error TS2339: Property 'date' does not exist on type 'Incident'.
+components/Incidents.tsx(89,180): error TS2339: Property 'time' does not exist on type 'Incident'.
+components/Incidents.tsx(92,124): error TS2339: Property 'type' does not exist on type 'Incident'.
+components/Layout.tsx(13,1): error TS6133: 'supabase' is declared but its value is never read.
+components/Layout.tsx(40,66): error TS6133: 'fontScale' is declared but its value is never read.
+components/Layout.tsx(40,77): error TS6133: 'setFontScale' is declared but its value is never read.
+components/Layout.tsx(42,11): error TS2339: Property 'activeShift' does not exist on type 'AppContextType'.
+components/Layout.tsx(42,24): error TS2339: Property 'clockIn' does not exist on type 'AppContextType'.
+components/Layout.tsx(42,33): error TS2339: Property 'clockOut' does not exist on type 'AppContextType'.
+components/Layout.tsx(46,10): error TS6133: 'isFullscreen' is declared but its value is never read.
+components/Layout.tsx(66,9): error TS6133: 'toggleFullscreen' is declared but its value is never read.
+components/Layout.tsx(80,9): error TS2322: Type '{ dashboard: boolean; dailyLog: boolean; tasks: boolean; medical: boolean; movements: boolean; safety: boolean; maintenance: boolean; settings: boolean; flightRecords: boolean; feedingSchedule: boolean; ... 8 more ...; documentManagement?: boolean | undefined; }' is not assignable to type 'UserPermissions'.
+  Types of property 'animalManagement' are incompatible.
+    Type 'boolean | undefined' is not assignable to type 'boolean'.
+      Type 'undefined' is not assignable to type 'boolean'.
+components/Layout.tsx(127,53): error TS2322: Type '"Owls"' is not assignable to type 'AnimalCategory'.
+components/Layout.tsx(129,26): error TS2322: Type '"Owls"' is not assignable to type 'AnimalCategory'.
+components/Layout.tsx(133,17): error TS2741: Property 'onSelectAnimal' is missing in type '{}' but required in type 'HealthProps'.
+components/Layout.tsx(139,17): error TS2739: Type '{}' is missing the following properties from type 'DailyRoundsProps': viewDate, setViewDate
+components/Layout.tsx(159,17): error TS2304: Cannot find name 'HelpCenter'.
+components/Layout.tsx(161,53): error TS2322: Type '"Owls"' is not assignable to type 'AnimalCategory'.
+components/Layout.tsx(169,31): error TS2551: Property 'logoUrl' does not exist on type 'OrganisationProfile'. Did you mean 'logo_url'?
+components/Layout.tsx(218,130): error TS2551: Property 'jobPosition' does not exist on type 'User'. Did you mean 'job_position'?
+components/MedicalRecordModal.tsx(3,10): error TS6133: 'Animal' is declared but its value is never read.
+components/MedicalRecordModal.tsx(3,72): error TS6133: 'User' is declared but its value is never read.
+components/MedicalRecordModal.tsx(18,47): error TS6133: 'users' is declared but its value is never read.
+components/MedicalRecordModal.tsx(31,20): error TS6133: 'setMedBatch' is declared but its value is never read.
+components/MedicalRecordModal.tsx(35,22): error TS6133: 'setMedEndDate' is declared but its value is never read.
+components/MedicalRecordModal.tsx(68,7): error TS2353: Object literal may only specify known properties, and 'user_initials' does not exist in type 'Omit<LogEntry, "id" | "updated_at" | "created_at" | "created_by">'.
+components/MedicalRecordModal.tsx(86,37): error TS2561: Object literal may only specify known properties, but 'is_archived' does not exist in type 'Partial<Animal>'. Did you mean to write 'archived'?
+components/MissingRecords.tsx(3,10): error TS6133: 'Animal' is declared but its value is never read.
+components/MissingRecords.tsx(6,1): error TS6133: 'useAuthStore' is declared but its value is never read.
+components/MissingRecords.tsx(37,50): error TS2339: Property 'type' does not exist on type 'LogEntry'.
+components/MissingRecords.tsx(37,79): error TS2339: Property 'date' does not exist on type 'LogEntry'.
+components/MissingRecords.tsx(38,48): error TS2339: Property 'type' does not exist on type 'LogEntry'.
+components/MissingRecords.tsx(38,75): error TS2339: Property 'date' does not exist on type 'LogEntry'.
+components/MissingRecords.tsx(39,47): error TS2339: Property 'date' does not exist on type 'LogEntry'.
+components/MissingRecords.tsx(120,49): error TS2551: Property 'imageUrl' does not exist on type 'Animal'. Did you mean 'image_url'?
+components/Movements.tsx(3,37): error TS6133: 'User' is declared but its value is never read.
+components/Movements.tsx(4,33): error TS6133: 'Trash2' is declared but its value is never read.
+components/Movements.tsx(9,34): error TS2339: Property 'addMovement' does not exist on type 'AppContextType'.
+components/Movements.tsx(9,34): error TS6133: 'addMovement' is declared but its value is never read.
+components/Movements.tsx(9,47): error TS2339: Property 'deleteMovement' does not exist on type 'AppContextType'.
+components/Movements.tsx(9,47): error TS6133: 'deleteMovement' is declared but its value is never read.
+components/Movements.tsx(10,9): error TS6133: 'currentUser' is declared but its value is never read.
+components/Movements.tsx(12,22): error TS6133: 'setFilterType' is declared but its value is never read.
+components/Movements.tsx(25,19): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Movements.tsx(26,21): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Movements.tsx(27,18): error TS7006: Parameter 'log' implicitly has an 'any' type.
+components/Movements.tsx(41,23): error TS2345: Argument of type '"Transfer" | MovementType' is not assignable to parameter of type 'SetStateAction<"Acquisition" | "Disposition" | "Transfer">'.
+  Type 'MovementType.LOAN_IN' is not assignable to type 'SetStateAction<"Acquisition" | "Disposition" | "Transfer">'.
+components/Movements.tsx(42,40): error TS2339: Property 'source' does not exist on type 'LogEntry'.
+components/Movements.tsx(43,38): error TS2339: Property 'destination' does not exist on type 'LogEntry'.
+components/Movements.tsx(68,38): error TS2304: Cannot find name 'MovementType'.
+components/Movements.tsx(69,11): error TS2353: Object literal may only specify known properties, and 'source' does not exist in type 'Omit<LogEntry, "id" | "updated_at" | "created_at" | "created_by" | "last_modified_by">'.
+components/Movements.tsx(73,37): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Movements.tsx(77,72): error TS2353: Object literal may only specify known properties, and 'log_entries' does not exist in type 'Partial<Animal>'.
+components/ProfileMissingScreen.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+components/Quarantine.tsx(3,55): error TS6133: 'User' is declared but its value is never read.
+components/Quarantine.tsx(4,42): error TS6133: 'X' is declared but its value is never read.
+components/Quarantine.tsx(4,45): error TS6133: 'ArrowRight' is declared but its value is never read.
+components/Quarantine.tsx(12,34): error TS6133: 'addLogEntry' is declared but its value is never read.
+components/Quarantine.tsx(35,11): error TS2353: Object literal may only specify known properties, and 'user_initials' does not exist in type 'Omit<LogEntry, "id" | "updated_at" | "created_at" | "created_by" | "last_modified_by">'.
+components/Quarantine.tsx(43,53): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Quarantine.tsx(61,11): error TS2353: Object literal may only specify known properties, and 'user_initials' does not exist in type 'Omit<LogEntry, "id" | "updated_at" | "created_at" | "created_by" | "last_modified_by">'.
+components/Quarantine.tsx(69,53): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Quarantine.tsx(122,50): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Quarantine.tsx(122,74): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Quarantine.tsx(125,50): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Quarantine.tsx(125,74): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Reports.tsx(5,27): error TS6133: 'Incident' is declared but its value is never read.
+components/Reports.tsx(5,37): error TS6133: 'SiteLogEntry' is declared but its value is never read.
+components/Reports.tsx(5,51): error TS6133: 'TimeLogEntry' is declared but its value is never read.
+components/Reports.tsx(5,65): error TS6133: 'OrganisationProfile' is declared but its value is never read.
+components/Reports.tsx(5,86): error TS6133: 'User' is declared but its value is never read.
+components/Reports.tsx(5,108): error TS6133: 'LogEntry' is declared but its value is never read.
+components/Reports.tsx(6,20): error TS6133: 'LayoutList' is declared but its value is never read.
+components/Reports.tsx(6,68): error TS6133: 'Bird' is declared but its value is never read.
+components/Reports.tsx(13,51): error TS2339: Property 'timeLogs' does not exist on type 'AppContextType'.
+components/Reports.tsx(13,51): error TS6133: 'timeLogs' is declared but its value is never read.
+components/Reports.tsx(13,90): error TS6133: 'log_entries' is declared but its value is never read.
+components/Reports.tsx(70,23): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Reports.tsx(70,49): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Reports.tsx(70,83): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Reports.tsx(84,21): error TS2551: Property 'is_archived' does not exist on type 'Animal'. Did you mean 'archived'?
+components/Reports.tsx(96,49): error TS2551: Property 'is_archived' does not exist on type 'Animal'. Did you mean 'archived'?
+components/Reports.tsx(101,22): error TS2339: Property 'date_of_birth' does not exist on type 'Animal'.
+components/Reports.tsx(101,79): error TS2339: Property 'date_of_birth' does not exist on type 'Animal'.
+components/Reports.tsx(116,53): error TS2551: Property 'is_archived' does not exist on type 'Animal'. Did you mean 'archived'?
+components/Reports.tsx(158,38): error TS2339: Property 'log_entries' does not exist on type 'Animal'.
+components/Reports.tsx(158,64): error TS7006: Parameter 'l' implicitly has an 'any' type.
+components/Reports.tsx(159,33): error TS7006: Parameter 'x' implicitly has an 'any' type.
+components/Reports.tsx(159,36): error TS7006: Parameter 'y' implicitly has an 'any' type.
+components/Reports.tsx(176,86): error TS2551: Property 'is_archived' does not exist on type 'Animal'. Did you mean 'archived'?
+components/SafetyDrills.tsx(3,24): error TS6133: 'User' is declared but its value is never read.
+components/SafetyDrills.tsx(3,30): error TS6133: 'TimeLogEntry' is declared but its value is never read.
+components/SafetyDrills.tsx(4,61): error TS6133: 'CheckCircle2' is declared but its value is never read.
+components/SafetyDrills.tsx(4,93): error TS6133: 'Calendar' is declared but its value is never read.
+components/SafetyDrills.tsx(9,21): error TS2339: Property 'timeLogs' does not exist on type 'AppContextType'.
+components/SafetyDrills.tsx(9,31): error TS6133: 'users' is declared but its value is never read.
+components/SafetyDrills.tsx(9,50): error TS2339: Property 'deleteSiteLog' does not exist on type 'AppContextType'.
+components/SafetyDrills.tsx(9,65): error TS2339: Property 'drills' does not exist on type 'AppContextType'.
+components/SafetyDrills.tsx(9,65): error TS6133: 'drills' is declared but its value is never read.
+components/SafetyDrills.tsx(9,73): error TS2339: Property 'addDrill' does not exist on type 'AppContextType'.
+components/SafetyDrills.tsx(9,73): error TS6133: 'addDrill' is declared but its value is never read.
+components/SafetyDrills.tsx(9,83): error TS2339: Property 'updateDrill' does not exist on type 'AppContextType'.
+components/SafetyDrills.tsx(9,83): error TS6133: 'updateDrill' is declared but its value is never read.
+components/SafetyDrills.tsx(9,96): error TS2339: Property 'deleteDrill' does not exist on type 'AppContextType'.
+components/SafetyDrills.tsx(9,96): error TS6133: 'deleteDrill' is declared but its value is never read.
+components/SafetyDrills.tsx(13,10): error TS6133: 'viewingDrill' is declared but its value is never read.
+components/SafetyDrills.tsx(25,90): error TS2339: Property 'timestamp' does not exist on type 'SiteLogEntry'.
+components/SafetyDrills.tsx(25,104): error TS2339: Property 'timestamp' does not exist on type 'SiteLogEntry'.
+components/SafetyDrills.tsx(32,34): error TS7006: Parameter 'log' implicitly has an 'any' type.
+components/SafetyDrills.tsx(55,49): error TS7006: Parameter 'p' implicitly has an 'any' type.
+components/SafetyDrills.tsx(55,89): error TS7006: Parameter 'p' implicitly has an 'any' type.
+components/SafetyDrills.tsx(56,48): error TS7006: Parameter 'p' implicitly has an 'any' type.
+components/SafetyDrills.tsx(56,89): error TS7006: Parameter 'p' implicitly has an 'any' type.
+components/SafetyDrills.tsx(60,11): error TS2353: Object literal may only specify known properties, and 'date' does not exist in type 'SiteLogEntry'.
+components/SafetyDrills.tsx(124,105): error TS2339: Property 'date' does not exist on type 'SiteLogEntry'.
+components/SafetyDrills.tsx(193,53): error TS7006: Parameter 'p' implicitly has an 'any' type.
+components/Schedule.tsx(6,1): error TS6133: 'useAuthStore' is declared but its value is never read.
+components/Schedule.tsx(9,62): error TS2339: Property 'feedingSchedules' does not exist on type 'AppContextType'.
+components/Schedule.tsx(9,62): error TS6133: 'feedingSchedules' is declared but its value is never read.
+components/Schedule.tsx(9,80): error TS2339: Property 'updateFeedingSchedule' does not exist on type 'AppContextType'.
+components/Schedule.tsx(9,80): error TS6133: 'updateFeedingSchedule' is declared but its value is never read.
+components/Schedule.tsx(9,103): error TS2339: Property 'addFeedingSchedule' does not exist on type 'AppContextType'.
+components/Schedule.tsx(9,103): error TS6133: 'addFeedingSchedule' is declared but its value is never read.
+components/Schedule.tsx(9,123): error TS2339: Property 'deleteFeedingSchedule' does not exist on type 'AppContextType'.
+components/Schedule.tsx(9,123): error TS6133: 'deleteFeedingSchedule' is declared but its value is never read.
+components/Schedule.tsx(72,17): error TS2322: Type '{ id: string; animal_id: string; type: LogType; title: string; due_date: string; completed: false; recurring: false; notes: string; }[]' is not assignable to type 'Task[]'.
+  Type '{ id: string; animal_id: string; type: LogType; title: string; due_date: string; completed: false; recurring: false; notes: string; }' is missing the following properties from type 'Task': task_type, created_at, created_by, updated_at, last_modified_by
+components/Schedule.tsx(91,83): error TS2339: Property 'type' does not exist on type 'Task'.
+components/Schedule.tsx(95,57): error TS2339: Property 'localeCompare' does not exist on type 'Date'.
+components/Schedule.tsx(145,24): error TS2339: Property 'type' does not exist on type 'Task'.
+components/Schedule.tsx(148,75): error TS2339: Property 'localeCompare' does not exist on type 'Date'.
+components/Schedule.tsx(148,114): error TS2339: Property 'localeCompare' does not exist on type 'Date'.
+components/Schedule.tsx(387,57): error TS2367: This comparison appears to be unintentional because the types 'Date' and 'string' have no overlap.
+components/Settings.tsx(5,19): error TS6133: 'Task' is declared but its value is never read.
+components/Settings.tsx(5,42): error TS6133: 'SystemPreferences' is declared but its value is never read.
+components/Settings.tsx(5,61): error TS6133: 'LocalBackupEntry' is declared but its value is never read.
+components/Settings.tsx(5,79): error TS6133: 'LogType' is declared but its value is never read.
+components/Settings.tsx(11,64): error TS6133: 'Globe' is declared but its value is never read.
+components/Settings.tsx(11,71): error TS6133: 'Edit2' is declared but its value is never read.
+components/Settings.tsx(12,3): error TS6133: 'ServerCrash' is declared but its value is never read.
+components/Settings.tsx(12,24): error TS6133: 'Search' is declared but its value is never read.
+components/Settings.tsx(12,32): error TS6133: 'Filter' is declared but its value is never read.
+components/Settings.tsx(12,40): error TS6133: 'Calendar' is declared but its value is never read.
+components/Settings.tsx(12,50): error TS6133: 'FileImage' is declared but its value is never read.
+components/Settings.tsx(12,95): error TS6133: 'ShieldAlert' is declared but its value is never read.
+components/Settings.tsx(13,25): error TS6133: 'HistoryIcon' is declared but its value is never read.
+components/Settings.tsx(13,62): error TS6133: 'ArrowRight' is declared but its value is never read.
+components/Settings.tsx(13,74): error TS6133: 'Save' is declared but its value is never read.
+components/Settings.tsx(14,25): error TS6133: 'Dna' is declared but its value is never read.
+components/Settings.tsx(14,30): error TS6133: 'FileWarning' is declared but its value is never read.
+components/Settings.tsx(14,50): error TS6133: 'Bug' is declared but its value is never read.
+components/Settings.tsx(14,74): error TS6133: 'UserCheck' is declared but its value is never read.
+components/Settings.tsx(14,101): error TS6133: 'ExternalLink' is declared but its value is never read.
+components/Settings.tsx(17,1): error TS6133: 'dataService' is declared but its value is never read.
+components/Settings.tsx(162,44): error TS6133: 'onLaunchBenchmark' is declared but its value is never read.
+components/Settings.tsx(166,41): error TS2339: Property 'updateFoodOptions' does not exist on type 'AppContextType'.
+components/Settings.tsx(167,18): error TS2339: Property 'updateFeedMethods' does not exist on type 'AppContextType'.
+components/Settings.tsx(167,49): error TS2339: Property 'updateEventTypes' does not exist on type 'AppContextType'.
+components/Settings.tsx(168,25): error TS6133: 'addUser' is declared but its value is never read.
+components/Settings.tsx(168,34): error TS6133: 'deleteUser' is declared but its value is never read.
+components/Settings.tsx(169,5): error TS2339: Property 'locations' does not exist on type 'AppContextType'.
+components/Settings.tsx(169,16): error TS2339: Property 'updateLocations' does not exist on type 'AppContextType'.
+components/Settings.tsx(169,43): error TS2339: Property 'updateContacts' does not exist on type 'AppContextType'.
+components/Settings.tsx(178,38): error TS2353: Object literal may only specify known properties, and 'licenceNumber' does not exist in type 'OrganisationProfile | (() => OrganisationProfile)'.
+components/Settings.tsx(193,59): error TS2345: Argument of type '{ id: string; name: string; role: string; phone: string; email: string; }' is not assignable to parameter of type 'Contact | (() => Contact)'.
+  Type '{ id: string; name: string; role: string; phone: string; email: string; }' is missing the following properties from type 'Contact': contact_type, created_at, created_by, updated_at, last_modified_by
+components/Settings.tsx(231,15): error TS2353: Object literal may only specify known properties, and 'licenceNumber' does not exist in type 'SetStateAction<OrganisationProfile>'.
+components/Settings.tsx(231,41): error TS2551: Property 'licenceNumber' does not exist on type 'OrganisationProfile'. Did you mean 'licence_number'?
+components/Settings.tsx(232,40): error TS2551: Property 'contactEmail' does not exist on type 'OrganisationProfile'. Did you mean 'contact_email'?
+components/Settings.tsx(233,40): error TS2551: Property 'contactPhone' does not exist on type 'OrganisationProfile'. Did you mean 'contact_phone'?
+components/Settings.tsx(234,35): error TS2551: Property 'logoUrl' does not exist on type 'OrganisationProfile'. Did you mean 'logo_url'?
+components/Settings.tsx(235,38): error TS2551: Property 'websiteUrl' does not exist on type 'OrganisationProfile'. Did you mean 'website_url'?
+components/Settings.tsx(236,39): error TS2551: Property 'adoptionUrl' does not exist on type 'OrganisationProfile'. Did you mean 'adoption_url'?
+components/Settings.tsx(255,50): error TS2551: Property 'latinName' does not exist on type 'Animal'. Did you mean 'latin_name'?
+components/Settings.tsx(257,51): error TS2551: Property 'ringNumber' does not exist on type 'Animal'. Did you mean 'ring_number'?
+components/Settings.tsx(257,87): error TS2551: Property 'microchip' does not exist on type 'Animal'. Did you mean 'microchip_id'?
+components/Settings.tsx(257,120): error TS2551: Property 'hasNoId' does not exist on type 'Animal'. Did you mean 'has_no_id'?
+components/Settings.tsx(259,52): error TS2339: Property 'arrivalDate' does not exist on type 'Animal'.
+components/Settings.tsx(280,47): error TS2561: Object literal may only specify known properties, but 'latinName' does not exist in type 'Partial<Animal>'. Did you mean to write 'latin_name'?
+components/Settings.tsx(282,47): error TS2561: Object literal may only specify known properties, but 'ringNumber' does not exist in type 'Partial<Animal>'. Did you mean to write 'ring_number'?
+components/Settings.tsx(284,47): error TS2353: Object literal may only specify known properties, and 'arrivalDate' does not exist in type 'Partial<Animal>'.
+components/Settings.tsx(289,31): error TS2559: Type 'User[]' has no properties in common with type 'Partial<User>'.
+components/Settings.tsx(300,29): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+components/Settings.tsx(329,33): error TS2551: Property 'jobPosition' does not exist on type 'Partial<User>'. Did you mean 'job_position'?
+components/Settings.tsx(330,11): error TS2322: Type 'UserPermissions | undefined' is not assignable to type 'UserPermissions'.
+  Type 'undefined' is not assignable to type 'UserPermissions'.
+components/Settings.tsx(331,31): error TS2339: Property 'signature' does not exist on type 'Partial<User>'.
+components/Settings.tsx(336,19): error TS2559: Type 'User[]' has no properties in common with type 'Partial<User>'.
+components/Settings.tsx(366,36): error TS2339: Property 'url' does not exist on type 'Partial<GlobalDocument>'.
+components/Settings.tsx(500,27): error TS2561: Object literal may only specify known properties, but 'latinName' does not exist in type 'Animal'. Did you mean to write 'latin_name'?
+components/Settings.tsx(500,59): error TS2551: Property 'latinName' does not exist on type 'Animal'. Did you mean 'latin_name'?
+components/Settings.tsx(501,64): error TS2551: Property 'redListStatus' does not exist on type 'Animal'. Did you mean 'red_list_status'?
+components/Settings.tsx(558,44): error TS7006: Parameter 'i' implicitly has an 'any' type.
+components/Settings.tsx(637,9): error TS6133: 'permissionGroups' is declared but its value is never read.
+components/Settings.tsx(731,42): error TS2551: Property 'logoUrl' does not exist on type 'OrganisationProfile'. Did you mean 'logo_url'?
+components/Settings.tsx(731,70): error TS2551: Property 'logoUrl' does not exist on type 'OrganisationProfile'. Did you mean 'logo_url'?
+components/Settings.tsx(740,199): error TS2551: Property 'licenceNumber' does not exist on type 'OrganisationProfile'. Did you mean 'licence_number'?
+components/Settings.tsx(740,253): error TS2353: Object literal may only specify known properties, and 'licenceNumber' does not exist in type 'SetStateAction<OrganisationProfile>'.
+components/Settings.tsx(745,196): error TS2551: Property 'contactEmail' does not exist on type 'OrganisationProfile'. Did you mean 'contact_email'?
+components/Settings.tsx(745,249): error TS2353: Object literal may only specify known properties, and 'contactEmail' does not exist in type 'SetStateAction<OrganisationProfile>'.
+components/Settings.tsx(746,190): error TS2551: Property 'contactPhone' does not exist on type 'OrganisationProfile'. Did you mean 'contact_phone'?
+components/Settings.tsx(746,243): error TS2353: Object literal may only specify known properties, and 'contactPhone' does not exist in type 'SetStateAction<OrganisationProfile>'.
+components/Settings.tsx(747,192): error TS2551: Property 'websiteUrl' does not exist on type 'OrganisationProfile'. Did you mean 'website_url'?
+components/Settings.tsx(747,243): error TS2353: Object literal may only specify known properties, and 'websiteUrl' does not exist in type 'SetStateAction<OrganisationProfile>'.
+components/Settings.tsx(748,191): error TS2551: Property 'adoptionUrl' does not exist on type 'OrganisationProfile'. Did you mean 'adoption_url'?
+components/Settings.tsx(748,243): error TS2353: Object literal may only specify known properties, and 'adoptionUrl' does not exist in type 'SetStateAction<OrganisationProfile>'.
+components/Settings.tsx(775,125): error TS2551: Property 'jobPosition' does not exist on type 'User'. Did you mean 'job_position'?
+components/Settings.tsx(781,68): error TS2339: Property 'signature' does not exist on type 'User'.
+components/Settings.tsx(796,65): error TS2345: Argument of type '{ id: string; name: string; role: string; phone: string; email: string; }' is not assignable to parameter of type 'SetStateAction<Contact>'.
+  Type '{ id: string; name: string; role: string; phone: string; email: string; }' is missing the following properties from type 'Contact': contact_type, created_at, created_by, updated_at, last_modified_by
+components/Settings.tsx(877,59): error TS2551: Property 'uploadDate' does not exist on type 'GlobalDocument'. Did you mean 'upload_date'?
+components/Settings.tsx(880,58): error TS2339: Property 'url' does not exist on type 'GlobalDocument'.
+components/Settings.tsx(1030,48): error TS7006: Parameter 'item' implicitly has an 'any' type.
+components/Settings.tsx(1102,62): error TS2551: Property 'imageUrl' does not exist on type 'Animal'. Did you mean 'image_url'?
+components/Settings.tsx(1278,80): error TS2304: Cannot find name 'Clock'.
+components/Settings.tsx(1412,59): error TS2339: Property 'signature' does not exist on type 'Partial<User>'.
+components/Settings.tsx(1412,119): error TS2353: Object literal may only specify known properties, and 'signature' does not exist in type 'SetStateAction<Partial<User>>'.
+components/Settings.tsx(1419,49): error TS2339: Property 'generateAuthenticationOptions' does not exist on type 'SupabaseAuthClient'.
+components/Settings.tsx(1420,29): error TS2551: Property 'signInWithWebAuthn' does not exist on type 'SupabaseAuthClient'. Did you mean 'signInWithOAuth'?
+components/Settings.tsx(1429,77): error TS2551: Property 'signInWithWebAuthn' does not exist on type 'SupabaseAuthClient'. Did you mean 'signInWithOAuth'?
+components/SignGenerator.tsx(4,126): error TS6133: 'Camera' is declared but its value is never read.
+components/SignGenerator.tsx(4,134): error TS6133: 'Upload' is declared but its value is never read.
+components/SiteMaintenance.tsx(3,24): error TS6133: 'User' is declared but its value is never read.
+components/SiteMaintenance.tsx(4,24): error TS6133: 'Filter' is declared but its value is never read.
+components/SiteMaintenance.tsx(4,32): error TS6133: 'FileText' is declared but its value is never read.
+components/SiteMaintenance.tsx(4,85): error TS6133: 'Calendar' is declared but its value is never read.
+components/SiteMaintenance.tsx(4,121): error TS6133: 'Printer' is declared but its value is never read.
+components/SiteMaintenance.tsx(9,33): error TS2339: Property 'deleteSiteLog' does not exist on type 'AppContextType'.
+components/SiteMaintenance.tsx(9,48): error TS2339: Property 'updateSiteLog' does not exist on type 'AppContextType'.
+components/SiteMaintenance.tsx(9,48): error TS6133: 'updateSiteLog' is declared but its value is never read.
+components/SiteMaintenance.tsx(32,28): error TS2339: Property 'date' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(32,49): error TS2339: Property 'date' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(34,18): error TS2339: Property 'timestamp' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(34,32): error TS2339: Property 'timestamp' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(44,23): error TS2345: Argument of type '"Low" | "Medium" | "High" | "Urgent"' is not assignable to parameter of type 'SetStateAction<"Low" | "Medium" | "High">'.
+  Type '"Urgent"' is not assignable to type 'SetStateAction<"Low" | "Medium" | "High">'.
+components/SiteMaintenance.tsx(45,21): error TS2345: Argument of type '"Pending" | "In Progress" | "Completed" | "Cancelled"' is not assignable to parameter of type 'SetStateAction<"Pending" | "In Progress" | "Completed">'.
+  Type '"Cancelled"' is not assignable to type 'SetStateAction<"Pending" | "In Progress" | "Completed">'.
+components/SiteMaintenance.tsx(46,23): error TS2339: Property 'cost' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(46,48): error TS2339: Property 'cost' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(47,26): error TS2339: Property 'date' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(65,11): error TS2353: Object literal may only specify known properties, and 'date' does not exist in type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(72,74): error TS2339: Property 'loggedBy' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(72,86): error TS18047: 'currentUser' is possibly 'null'.
+components/SiteMaintenance.tsx(72,110): error TS18047: 'currentUser' is possibly 'null'.
+components/SiteMaintenance.tsx(73,75): error TS2339: Property 'timestamp' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(142,91): error TS2339: Property 'date' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(143,135): error TS2339: Property 'loggedBy' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(174,44): error TS2339: Property 'cost' does not exist on type 'SiteLogEntry'.
+components/SiteMaintenance.tsx(174,69): error TS2339: Property 'cost' does not exist on type 'SiteLogEntry'.
+components/Tasks.tsx(3,39): error TS6133: 'SiteLogEntry' is declared but its value is never read.
+components/Tasks.tsx(4,99): error TS6133: 'ClipboardList' is declared but its value is never read.
+components/Tasks.tsx(11,42): error TS6133: 'deleteTask' is declared but its value is never read.
+components/Tasks.tsx(29,60): error TS2339: Property 'assignedTo' does not exist on type 'Task'.
+components/Tasks.tsx(33,35): error TS2551: Property 'dueDate' does not exist on type 'Task'. Did you mean 'due_date'?
+components/Tasks.tsx(33,59): error TS2551: Property 'dueDate' does not exist on type 'Task'. Did you mean 'due_date'?
+components/Tasks.tsx(40,16): error TS2339: Property 'type' does not exist on type 'Task'.
+components/Tasks.tsx(40,48): error TS2551: Property 'animalId' does not exist on type 'Task'. Did you mean 'animal_id'?
+components/Tasks.tsx(41,58): error TS2551: Property 'animalId' does not exist on type 'Task'. Did you mean 'animal_id'?
+components/Tasks.tsx(59,11): error TS2353: Object literal may only specify known properties, and 'type' does not exist in type 'Task'.
+components/Tasks.tsx(109,64): error TS2551: Property 'animalId' does not exist on type 'Task'. Did you mean 'animal_id'?
+components/Tasks.tsx(110,59): error TS2551: Property 'dueDate' does not exist on type 'Task'. Did you mean 'due_date'?
+components/Tasks.tsx(111,77): error TS2339: Property 'assignedTo' does not exist on type 'Task'.
+components/Tasks.tsx(117,178): error TS2339: Property 'type' does not exist on type 'Task'.
+components/Tasks.tsx(123,176): error TS2551: Property 'dueDate' does not exist on type 'Task'. Did you mean 'due_date'?
+components/Tasks.tsx(217,77): error TS2339: Property 'type' does not exist on type 'Task'.
+components/TimeSheets.tsx(3,61): error TS6133: 'X' is declared but its value is never read.
+components/TimeSheets.tsx(3,64): error TS6133: 'AlertCircle' is declared but its value is never read.
+components/TimeSheets.tsx(8,13): error TS2339: Property 'timeLogs' does not exist on type 'AppContextType'.
+components/TimeSheets.tsx(8,30): error TS2339: Property 'deleteTimeLog' does not exist on type 'AppContextType'.
+components/TimeSheets.tsx(8,45): error TS2339: Property 'updateTimeLog' does not exist on type 'AppContextType'.
+components/TimeSheets.tsx(8,45): error TS6133: 'updateTimeLog' is declared but its value is never read.
+components/TimeSheets.tsx(13,12): error TS6133: 'editingLog' is declared but its value is never read.
+components/TimeSheets.tsx(13,24): error TS6133: 'setEditingLog' is declared but its value is never read.
+components/TimeSheets.tsx(19,61): error TS2551: Property 'userId' does not exist on type 'TimeLogEntry'. Did you mean 'user_id'?
+components/TimeSheets.tsx(20,50): error TS2339: Property 'date' does not exist on type 'TimeLogEntry'.
+components/TimeSheets.tsx(22,57): error TS2551: Property 'startTime' does not exist on type 'TimeLogEntry'. Did you mean 'start_time'?
+components/TimeSheets.tsx(22,71): error TS2551: Property 'startTime' does not exist on type 'TimeLogEntry'. Did you mean 'start_time'?
+components/TimeSheets.tsx(90,58): error TS2339: Property 'userName' does not exist on type 'TimeLogEntry'.
+components/TimeSheets.tsx(90,82): error TS7006: Parameter 'n' implicitly has an 'any' type.
+components/TimeSheets.tsx(92,131): error TS2339: Property 'userName' does not exist on type 'TimeLogEntry'.
+components/TimeSheets.tsx(96,109): error TS2339: Property 'date' does not exist on type 'TimeLogEntry'.
+components/TimeSheets.tsx(101,135): error TS2551: Property 'startTime' does not exist on type 'TimeLogEntry'. Did you mean 'start_time'?
+components/TimeSheets.tsx(104,58): error TS2551: Property 'endTime' does not exist on type 'TimeLogEntry'. Did you mean 'end_time'?
+components/TimeSheets.tsx(104,81): error TS2551: Property 'endTime' does not exist on type 'TimeLogEntry'. Did you mean 'end_time'?
+components/TimeSheets.tsx(110,88): error TS2551: Property 'durationMinutes' does not exist on type 'TimeLogEntry'. Did you mean 'duration_minutes'?
+components/WeatherView.tsx(10,5): error TS6133: 'Thermometer' is declared but its value is never read.
+components/WeatherView.tsx(15,9): error TS6133: 'orgProfile' is declared but its value is never read.
+components/reports/ReportDocument.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+components/reports/ReportViewer.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+components/reports/reportConfig.ts(2,1): error TS6192: All imports in import declaration are unused.
+constants.ts(2,10): error TS6133: 'Animal' is declared but its value is never read.
+constants.ts(2,34): error TS6133: 'LogType' is declared but its value is never read.
+constants.ts(2,43): error TS6133: 'SystemPreferences' is declared but its value is never read.
+constants.ts(2,62): error TS6133: 'LocalBackupConfig' is declared but its value is never read.
+src/context/AppContext.tsx(5,186): error TS6133: 'LogType' is declared but its value is never read.
+src/context/AppContext.tsx(5,195): error TS6133: 'AnimalCategory' is declared but its value is never read.
+src/context/AppContext.tsx(11,17): error TS6133: 'authUser' is declared but its value is never read.
+src/services/DocumentService.ts(125,83): error TS6133: 'users' is declared but its value is never read.
+src/services/DocumentService.ts(125,158): error TS6133: 'currentUser' is declared but its value is never read.
+src/services/backupService.ts(96,31): error TS6133: 'snapshot' is declared but its value is never read.
+src/services/diagnosticsService.ts(1,30): error TS6133: 'AnimalCategory' is declared but its value is never read.
+src/services/diagnosticsService.ts(1,90): error TS6133: 'UserRole' is declared but its value is never read.
+src/services/diagnosticsService.ts(18,37): error TS6133: 'tasks' is declared but its value is never read.
+src/services/geminiService.ts(2,48): error TS6133: 'Type' is declared but its value is never read.

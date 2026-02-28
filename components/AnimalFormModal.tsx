@@ -4,7 +4,7 @@ import { Animal, AnimalCategory, HazardRating, ConservationStatus } from '@/type
 import { X, Check, Camera, Sparkles, Loader2, Zap, Shield, History, Info, Globe, Skull, Users } from 'lucide-react';
 import { getLatinName, getConservationStatus } from '@/src/services/geminiService';
 import { useAppData } from '@/src/context/AppContext';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 interface AnimalFormModalProps {
   isOpen: boolean;
@@ -38,7 +38,7 @@ const resizeImage = (file: File): Promise<string> => {
 
 const AnimalFormModal: React.FC<AnimalFormModalProps> = ({ isOpen, onClose, initialData, locations = [] }) => {
   const { addAnimal, updateAnimal } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   const [isAiPending, startAiTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 

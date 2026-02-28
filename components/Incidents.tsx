@@ -3,11 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { Incident, IncidentType, IncidentSeverity, Animal, User } from '@/types';
 import { ShieldAlert, Plus, Calendar, Clock, X, AlertTriangle, MapPin, Trash2 } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const Incidents: React.FC = () => {
   const { incidents, animals, addIncident, updateIncident, deleteIncident } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);

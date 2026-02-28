@@ -3,7 +3,7 @@ import React, { useState, useMemo, useTransition } from 'react';
 import { Animal, AnimalCategory, Task, LogType } from '@/types';
 import { CalendarClock, Plus, Calendar, Trash2, Filter, Utensils, RefreshCw, Loader2, History, ArrowRight, Copy } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const Schedule: React.FC = () => {
   const { animals, tasks, foodOptions, addTasks, deleteTask, feedingSchedules, updateFeedingSchedule, addFeedingSchedule, deleteFeedingSchedule } = useAppData();

@@ -3,11 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { FirstAidLogEntry, User } from '@/types';
 import { Stethoscope, Plus, MapPin, Clock, X, Trash2, Calendar, User as UserIcon } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const FirstAid: React.FC = () => {
   const { firstAidLogs, addFirstAid, deleteFirstAid } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);

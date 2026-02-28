@@ -4,7 +4,7 @@ import { Animal, LogType, LogEntry, HealthRecordType, HealthCondition, User, Use
 import { X, Check, Pill, Skull } from 'lucide-react';
 import { BCSSelector } from './BCSSelector';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 interface MedicalRecordModalProps {
   isOpen: boolean;
@@ -16,7 +16,7 @@ const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
   isOpen, onClose, preSelectedAnimalId 
 }) => {
   const { animals, addLogEntry, updateAnimal, users } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
 
   const [selectedAnimalId, setSelectedAnimalId] = useState<string>(preSelectedAnimalId || '');
   const [recordType, setRecordType] = useState<HealthRecordType>(HealthRecordType.OBSERVATION);

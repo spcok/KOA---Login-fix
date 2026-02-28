@@ -18,10 +18,11 @@ import { dataService } from '@/src/services/dataService';
 import { diagnosticsService, DiagnosticIssue } from '@/src/services/diagnosticsService';
 import { batchGetSpeciesData, getLatinName } from '@/src/services/geminiService';
 import { useAppData } from '@/src/context/AppContext';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 import { migrateLegacyData } from '@/src/services/migrationService';
 import { parseSmartCSV, parseCSVToAnimals } from '@/src/services/csvService';
 import { formatWeightDisplay } from '@/src/services/weightUtils';
+import { supabase } from '@/src/services/supabaseClient';
 
 interface SettingsProps {
   onLaunchBenchmark?: () => void;
@@ -159,7 +160,8 @@ const SignaturePad = ({ value, onChange }: { value: string, onChange: (v: string
 };
 
 const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
-  const { profile: currentUser, supabase } = useAuth();
+  const { profile: currentUser } = useAuthStore();
+  // supabase is imported directly if needed, but let's check if it's imported.
   const {
     animals, updateAnimal, foodOptions, updateFoodOptions,
     feedMethods, updateFeedMethods, eventTypes, updateEventTypes,
@@ -173,7 +175,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
   const [listSection, setListSection] = useState<AnimalCategory>(AnimalCategory.OWLS);
   
   const [orgForm, setOrgForm] = useState<OrganisationProfile>({
-      name: '', address: '', licenceNumber: '', contactEmail: '', contactPhone: '', logoUrl: '', websiteUrl: '', adoptionUrl: ''
+      id: '', name: '', address: '', licenceNumber: '', contactEmail: '', contactPhone: '', logoUrl: '', websiteUrl: '', adoptionUrl: ''
   });
 
   // User Management State
@@ -223,6 +225,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
   useEffect(() => {
       if (orgProfile) {
           setOrgForm({
+              id: orgProfile.id || '',
               name: orgProfile.name || '',
               address: orgProfile.address || '',
               licenceNumber: orgProfile.licenceNumber || '',

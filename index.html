@@ -18,7 +18,7 @@
         } catch (e) {}
       })();
       window.global = window;
-      window.Buffer = window.Buffer || Buffer.Buffer;
+      window.Buffer = window.Buffer || (typeof buffer !== 'undefined' ? buffer.Buffer : (typeof Buffer !== 'undefined' ? Buffer.Buffer : undefined));
       window.process = { 
         env: { NODE_ENV: 'production' },
         cwd: () => '/',
@@ -31,6 +31,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:,">
   <script type="importmap">
 {
   "imports": {
@@ -56,6 +57,6 @@
 </head>
   <body class="bg-slate-100 text-slate-800 h-screen overflow-hidden">
     <div id="root" class="h-full"></div>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

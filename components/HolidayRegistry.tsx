@@ -3,11 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { HolidayRequest, UserRole } from '@/types';
 import { Calendar, Plus, CheckCircle, XCircle, Clock, Trash2, Check, X, Info } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const HolidayRegistry: React.FC = () => {
     const { holidayRequests, addHoliday, updateHoliday, deleteHoliday } = useAppData();
-    const { profile: currentUser } = useAuth();
+    const { profile: currentUser } = useAuthStore();
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [startDate, setStartDate] = useState('');

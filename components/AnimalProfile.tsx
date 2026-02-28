@@ -1,12 +1,12 @@
 
 import React, { useState, useMemo } from 'react';
-import { Animal, LogType, UserRole } from '@/types';
+import { Animal, LogType, UserRole, LogEntry } from '@/types';
 import { ChevronLeft, Scale, Utensils, Printer, Edit, Trash2, AlertTriangle, Plus, Filter, Activity } from 'lucide-react';
 import { formatWeightDisplay } from '@/src/services/weightUtils';
 import AddEntryModal from './AddEntryModal';
 import SignGenerator from './SignGenerator';
 import { useAppData } from '@/src/context/AppContext';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 import AnimalFormModal from './AnimalFormModal';
 import { IUCNBadge } from './IUCNBadge';
 
@@ -16,7 +16,7 @@ interface AnimalProfileProps {
 }
 
 const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   const { 
     log_entries,
     addLogEntry,
@@ -25,8 +25,7 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
     foodOptions, 
     feedMethods, 
     eventTypes, 
-    animals, 
-    locations 
+    animals
   } = useAppData();
   
   const [activeTab, setActiveTab] = useState<'Overview' | 'Husbandry Logs' | 'Medical Records' | 'Species Info'>('Overview');
@@ -307,7 +306,7 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
                                                 <p className="text-xs font-medium text-slate-500 italic">{log.notes || '-'}</p>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{log.log_userInitials}</span>
+                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{log.user_initials}</span>
                                             </td>
                                         </tr>
                                     ))}
@@ -360,7 +359,7 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
                                                 <p className="text-xs font-medium text-slate-500 italic">{log.notes || '-'}</p>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{log.log_userInitials}</span>
+                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{log.user_initials}</span>
                                             </td>
                                         </tr>
                                     ))}
@@ -397,7 +396,6 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
                 isOpen={isEditProfileOpen}
                 onClose={() => setIsEditProfileOpen(false)}
                 initialData={animal}
-                locations={locations}
             />
         )}
 
@@ -406,7 +404,7 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
                 isOpen={isAddEntryOpen}
                 onClose={() => setIsAddEntryOpen(false)}
                 onSave={(entry) => {
-                    addLogEntry(entry);
+                    addLogEntry(entry as LogEntry, animal.id);
                 }}
                 animal={animal}
                 initialType={entryType}

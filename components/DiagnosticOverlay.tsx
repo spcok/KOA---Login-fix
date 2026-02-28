@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Activity, Bug, CheckCircle2, XCircle, Play, AlertTriangle, ShieldCheck, X, Terminal, RefreshCw } from 'lucide-react';
 import { useAppData } from '@/src/context/AppContext';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 import { formatWeightDisplay } from '@/src/services/weightUtils';
 import { parseSmartCSV, parseCSVToAnimals } from '@/src/services/csvService';
 import { diagnosticsService, DiagnosticIssue } from '@/src/services/diagnosticsService';

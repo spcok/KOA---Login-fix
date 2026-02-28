@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import LoginScreen from './components/LoginScreen';
 import { Loader2 } from 'lucide-react';
-import { AuthProvider, useAuth } from './src/context/AuthContext';
+import { useAuthStore } from './src/store/authStore';
 import { AppProvider } from './src/context/AppContext';
+
+// Initialize the store outside the React tree to avoid lifecycle race conditions
+useAuthStore.getState().initialize();
 
 const ProfileMissingScreen = ({ onSignOut }: { onSignOut: () => void }) => (
   <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-100 gap-4">
@@ -27,11 +30,11 @@ const GlobalSpinner = () => (
 );
 
 function AppContent() {
-  const { user, profile, isLoading, signOut } = useAuth();
+  const { user, profile, isLoading, isInitialized, signOut } = useAuthStore();
   const [view, setView] = useState<string>('dashboard');
   const [fontScale, setFontScale] = useState(100);
 
-  if (isLoading) {
+  if (!isInitialized || isLoading) {
     return <GlobalSpinner />;
   }
 
@@ -51,11 +54,7 @@ function AppContent() {
 }
 
 function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
+  return <AppContent />;
 }
 
 export default App;

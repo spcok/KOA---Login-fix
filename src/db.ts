@@ -24,7 +24,7 @@ export class KoaDatabase extends Dexie {
   site_log_entries!: Table<SiteLogEntry, string>;
   incidents!: Table<Incident, string>;
   first_aid_log_entries!: Table<FirstAidLogEntry, string>;
-  organisation_profile!: Table<OrganisationProfile, number>;
+  organisation_profile!: Table<OrganisationProfile, string>;
   audit_log_entries!: Table<AuditLogEntry, string>;
   daily_round_entries!: Table<DailyRoundEntry, string>;
   bcs_data!: Table<BCSData, string>;
@@ -44,7 +44,7 @@ export class KoaDatabase extends Dexie {
       site_log_entries: 'id, log_date, status, priority',
       incidents: 'id, incident_date, status, severity, animal_id',
       first_aid_log_entries: 'id, log_date, incident_type',
-      organisation_profile: '++id',
+      organisation_profile: 'id',
       audit_log_entries: 'id, affected_entity_id, action_type, created_at',
       daily_round_entries: 'id, round_date, animal_id',
       bcs_data: 'id, animal_id, date',

@@ -10,7 +10,7 @@ import MedicalRecordModal from './MedicalRecordModal';
 import Quarantine from './Quarantine';
 // FIX: Import useAppData hook to get data from context.
 import { useAppData } from '@/src/context/AppContext';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 interface HealthProps {
   onSelectAnimal: (animal: Animal) => void;
@@ -19,7 +19,7 @@ interface HealthProps {
 const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
   // FIX: Get data and actions from useAppData context instead of props.
   const { animals, updateAnimal, tasks, addTask, updateTask, deleteTask, users, orgProfile, medical_records } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
 
   const [activeTab, setActiveTab] = useState<'medical' | 'quarantine' | 'mar' | 'repro'>('medical');
   const [isModalOpen, setIsModalOpen] = useState(false);

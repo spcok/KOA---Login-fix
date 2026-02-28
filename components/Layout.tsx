@@ -8,7 +8,7 @@ import {
   HelpCircle, FileText, Calendar, ClipboardCheck, Wifi, WifiOff
 } from 'lucide-react';
 import { UserPermissions } from '@/types';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 import { useAppData } from '@/src/context/AppContext';
 import { supabase } from '@/src/services/supabaseClient';
 
@@ -38,7 +38,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ activeView, onNavigate, fontScale, setFontScale }) => {
-  const { profile: currentUser, signOut } = useAuth();
+  const { profile: currentUser, signOut } = useAuthStore();
   const { activeShift, clockIn, clockOut, orgProfile } = useAppData();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

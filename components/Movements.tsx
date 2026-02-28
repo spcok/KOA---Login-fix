@@ -3,11 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { Animal, LogType, LogEntry, User } from '@/types';
 import { ArrowLeftRight, Edit2, Trash2, Plus, X, ArrowRight, User as UserIcon } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const Movements: React.FC = () => {
   const { animals, updateAnimal, addMovement, deleteMovement } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   
   const [filterType, setFilterType] = useState<'ALL' | 'Acquisition' | 'Disposition' | 'Transfer'>('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);

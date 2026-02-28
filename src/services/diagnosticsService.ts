@@ -21,7 +21,7 @@ export const diagnosticsService = {
 
     animals.forEach(a => {
       // 1. STATUTORY IDENTIFICATION (ZLA Section 9)
-      const hasId = a.ringNumber || a.microchip || a.hasNoId;
+      const hasId = a.ring_number || a.microchip_id || a.has_no_id;
       if (!hasId) {
         issues.push({
           id: `comp_id_${a.id}`,
@@ -35,7 +35,7 @@ export const diagnosticsService = {
       }
 
       // 2. ACQUISITION RECORDS (ZLA Section 9)
-      if (!a.arrivalDate || !a.origin) {
+      if (!a.acquisition_date || !a.origin) {
         issues.push({
           id: `comp_orig_${a.id}`,
           timestamp,
@@ -48,7 +48,7 @@ export const diagnosticsService = {
       }
 
       // 3. TAXONOMY (SSSMZP Standard 1)
-      if (!a.latinName || a.latinName === 'Unknown') {
+      if (!a.latin_name || a.latin_name === 'Unknown') {
         issues.push({
           id: `comp_tax_${a.id}`,
           timestamp,
@@ -61,17 +61,17 @@ export const diagnosticsService = {
       }
 
       // 4. VETERINARY COMPLIANCE (SSSMZP Standard 3)
-      const healthLogs = (a.logs || []).filter(l => l.type === LogType.HEALTH);
-      const medicationLogs = healthLogs.filter(l => l.healthType === HealthRecordType.MEDICATION);
+      const healthLogs = (a.logs || []).filter(l => l.log_type === LogType.HEALTH);
+      const medicationLogs = healthLogs.filter(l => l.health_record_type === HealthRecordType.MEDICATION);
       
       medicationLogs.forEach(ml => {
-          if (!ml.medicationBatch || !ml.prescribedBy) {
+          if (!ml.medication_batch || !ml.prescribed_by_user_id) {
               issues.push({
                   id: `comp_med_${ml.id}`,
                   timestamp,
                   severity: 'Warning',
                   category: 'Compliance',
-                  message: `Medication record for "${a.name}" (${ml.date}) is missing batch or prescriber data.`,
+                  message: `Medication record for "${a.name}" (${ml.log_date}) is missing batch or prescriber data.`,
                   remediation: 'RCVS/DEFRA standards require full traceability of dispensed controlled substances.',
                   subjectId: a.id
               });
@@ -80,7 +80,7 @@ export const diagnosticsService = {
 
       // 5. DECEASED PROTOCOL
       const deceasedLog = healthLogs.find(l => l.condition === HealthCondition.DECEASED);
-      if (deceasedLog && (!deceasedLog.causeOfDeath || !deceasedLog.disposalMethod)) {
+      if (deceasedLog && (!deceasedLog.cause_of_death || !deceasedLog.disposal_method)) {
           issues.push({
               id: `comp_eol_${a.id}`,
               timestamp,

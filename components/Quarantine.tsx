@@ -6,11 +6,11 @@ import { Biohazard, AlertTriangle, Plus, X, ArrowRight, ShieldCheck, Thermometer
 
 
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const Quarantine: React.FC = () => {
   const { animals, updateAnimal, addLogEntry } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Move to Quarantine Form

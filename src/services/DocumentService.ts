@@ -27,12 +27,12 @@ export const DocumentService = {
     // Fix: Changed OrganizationProfile to OrganisationProfile
     createHeader: async (profile: OrganisationProfile | null, reportTitle: string = "STATUTORY RECORD", dateRangeText: string): Promise<Header> => {
         let logoRun: ImageRun | TextRun = new TextRun("");
-        if (profile?.logoUrl) {
-            const buffer = await urlToBuffer(profile.logoUrl);
+        if (profile?.logo_url) {
+            const buffer = await urlToBuffer(profile.logo_url);
             if (buffer) logoRun = new ImageRun({ data: buffer, transformation: { width: 60, height: 60 } });
         }
         const orgName = (profile?.name || "KENT OWL ACADEMY").toUpperCase();
-        const licenseNo = profile?.licenceNumber || "UNKNOWN";
+        const licenseNo = profile?.licence_number || "UNKNOWN";
 
         return new Header({
             children: [
@@ -75,8 +75,8 @@ export const DocumentService = {
     createSignatureBlock: async (user: User | null | undefined): Promise<Paragraph[]> => {
         if (!user) return [];
         let sigImage: ImageRun | null = null;
-        if (user.signature) {
-            const buffer = await urlToBuffer(user.signature);
+        if (user.signature_image_url) {
+            const buffer = await urlToBuffer(user.signature_image_url);
             if (buffer) sigImage = new ImageRun({ data: buffer, transformation: { width: 150, height: 60 } });
         }
         const now = new Date().toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' });
@@ -128,10 +128,11 @@ export const DocumentService = {
         const groups: Record<string, Record<string, { am?: SiteLogEntry, pm?: SiteLogEntry }>> = {};
         logs.forEach(l => {
             let d: any = {}; try { d = JSON.parse(l.description); } catch(e) { return; }
-            if (!groups[l.date]) groups[l.date] = {};
-            if (!groups[l.date][d.section]) groups[l.date][d.section] = {};
-            if (d.type === 'Morning') groups[l.date][d.section].am = l;
-            if (d.type === 'Evening') groups[l.date][d.section].pm = l;
+            const logDate = new Date(l.log_date).toISOString().split('T')[0];
+            if (!groups[logDate]) groups[logDate] = {};
+            if (!groups[logDate][d.section]) groups[logDate][d.section] = {};
+            if (d.type === 'Morning') groups[logDate][d.section].am = l;
+            if (d.type === 'Evening') groups[logDate][d.section].pm = l;
         });
 
         for (const dateKey of Object.keys(groups).sort().reverse()) {
@@ -183,12 +184,12 @@ export const DocumentService = {
                 new TableCell({ children: [new Paragraph({ children: [new TextRun({ text, bold: true, size: 24, font: "Arial", color: "FFFFFF" })] })], shading: { fill: "1F2937" }, verticalAlign: VerticalAlign.CENTER, margins: { top: 100, bottom: 100, left: 100, right: 100 } })
             )}),
             ...animals.map(a => new TableRow({ children: [
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.ringNumber || a.microchip || "-", size: 22, font: "Arial" })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.ring_number || a.microchip_id || "-", size: 22, font: "Arial" })] })] }),
                 new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.name, bold: true, size: 22, font: "Arial" })] })] }),
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.latinName || "-", italics: true, size: 22, font: "Arial" })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.latin_name || "-", italics: true, size: 22, font: "Arial" })] })] }),
                 new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.sex || "?", size: 22, font: "Arial" })] })] }),
                 new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.origin || "Unknown", size: 22, font: "Arial" })] })] }),
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.arrivalDate ? new Date(a.arrivalDate).toLocaleDateString('en-GB') : "-", size: 22, font: "Arial" })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a.acquisition_date ? new Date(a.acquisition_date).toLocaleDateString('en-GB') : "-", size: 22, font: "Arial" })] })] }),
             ]}))
         ];
         const doc = new Document({ styles: { default: { document: { run: { font: "Arial", size: 22, color: COLOR_BLACK } } } }, sections: [{ headers: { default: header }, properties: { page: { margin: MARGINS } }, children: [new Table({ rows: tableRows, width: { size: 100, type: WidthType.PERCENTAGE } }), ...signature] }] });
@@ -230,13 +231,13 @@ export const DocumentService = {
                     rows: [
                         new TableRow({ children: [
                             new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "DATE/TIME", bold: true, size: 22 })] })], shading: { fill: "F3F4F6" } }),
-                            new TableCell({ children: [new Paragraph({ text: `${new Date(inc.date).toLocaleDateString('en-GB')} ${inc.time}` })] }),
+                            new TableCell({ children: [new Paragraph({ text: `${new Date(inc.incident_date).toLocaleDateString('en-GB')} ${inc.incident_time}` })] }),
                             new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "LOCATION", bold: true, size: 22 })] })], shading: { fill: "F3F4F6" } }),
                             new TableCell({ children: [new Paragraph({ text: inc.location })] }),
                         ]}),
                         new TableRow({ children: [
                             new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "CATEGORY", bold: true, size: 22 })] })], shading: { fill: "F3F4F6" } }),
-                            new TableCell({ children: [new Paragraph({ text: inc.type })] }),
+                            new TableCell({ children: [new Paragraph({ text: inc.incident_type })] }),
                             new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "SEVERITY", bold: true, size: 22 })] })], shading: { fill: "F3F4F6" } }),
                             new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: inc.severity, bold: true, color: inc.severity === "Critical" ? "FF0000" : "000000" })] })] }),
                         ]}),
@@ -244,7 +245,7 @@ export const DocumentService = {
                         new TableRow({ children: [new TableCell({ columnSpan: 4, children: [new Paragraph({ text: inc.description })] })] }),
                         new TableRow({ children: [
                             // Fixed bold property: must be within TextRun
-                            new TableCell({ columnSpan: 2, children: [new Paragraph({ children: [new TextRun({ text: `Reported By: ${inc.reportedBy}`, bold: true })] })] }),
+                            new TableCell({ columnSpan: 2, children: [new Paragraph({ children: [new TextRun({ text: `Reported By: ${inc.reported_by_user_id}`, bold: true })] })] }),
                             new TableCell({ columnSpan: 2, children: [new Paragraph({ children: [new TextRun({ text: `Status: ${inc.status}`, bold: true })], alignment: AlignmentType.RIGHT })] }),
                         ]})
                     ]

@@ -3,11 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { SiteLogEntry, User, TimeLogEntry } from '@/types';
 import { ShieldAlert, Plus, Clock, Users, Timer, X, Trash2, CheckCircle2, UserCheck, Check, Calendar } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const SafetyDrills: React.FC = () => {
   const { siteLogs, timeLogs, users, addSiteLog, deleteSiteLog, drills, addDrill, updateDrill, deleteDrill } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewingDrill, setViewingDrill] = useState<SiteLogEntry | null>(null);

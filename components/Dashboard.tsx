@@ -1,10 +1,10 @@
 
 import React, { useState, useMemo } from 'react';
-import { Animal, AnimalCategory, LogType, LogEntry, UserRole, HazardRating } from '@/types';
+import { Animal, AnimalCategory, LogType, LogEntry, UserRole, HazardRating, Task } from '@/types';
 import { Search, Plus, Scale, Utensils, ChevronLeft, ChevronRight, GripVertical, ArrowRight, Heart, ChevronDown, ChevronUp, CheckCircle, AlertCircle, ClipboardCheck, Skull, AlertTriangle, Lock, Unlock } from 'lucide-react';
 import { formatWeightDisplay } from '@/src/services/weightUtils';
 import AnimalFormModal from './AnimalFormModal';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 import { useAppData } from '@/src/context/AppContext';
 
 interface DashboardProps {
@@ -18,7 +18,7 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ 
     onSelectAnimal, activeTab, setActiveTab, viewDate, setViewDate
 }) => {
-    const { profile: currentUser } = useAuth();
+    const { profile: currentUser } = useAuthStore();
   const {
     animals, addAnimal, tasks
   } = useAppData();
@@ -51,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       }>();
 
       for (const animal of catAnimals) {
-          const logs = animal.log_entries || [] as LogEntry[];
+          const logs = animal.logs || [] as LogEntry[];
           const weights: LogEntry[] = [];
           const feeds: LogEntry[] = [];
           
@@ -79,8 +79,8 @@ const Dashboard: React.FC<DashboardProps> = ({
   }, [animals, activeTab, viewDate]);
 
   const taskStats = useMemo(() => ({
-      pendingTasks: (tasks || []).filter((t: Task) => !t.completed && t.type !== LogType.HEALTH),
-      pendingHealth: (tasks || []).filter((t: Task) => !t.completed && t.type === LogType.HEALTH)
+      pendingTasks: (tasks || []).filter((t: Task) => !t.completed && t.task_type !== LogType.HEALTH),
+      pendingHealth: (tasks || []).filter((t: Task) => !t.completed && t.task_type === LogType.HEALTH)
   }), [tasks]);
 
   const filteredAnimals = useMemo(() => {
@@ -186,7 +186,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               {areTasksOpen && (
                   <div className="p-4 md:p-5 bg-white border-t-2 border-slate-100 max-h-64 overflow-y-auto scrollbar-hide animate-in slide-in-from-top-4">
                       {taskStats.pendingTasks.length > 0 ? (
-                          <div className="space-y-2">{taskStats.pendingTasks.map(t => (<div key={t.id} className="flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-emerald-200 transition-colors"><div className="mt-0.5"><AlertCircle size={16} className="text-amber-500"/></div><div><p className="text-xs md:text-sm font-black text-slate-800 uppercase leading-tight">{t.title}</p><p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">DUE: {new Date(t.dueDate).toLocaleDateString('en-GB', {day:'numeric', month:'short'})}</p></div></div>))}</div>
+                          <div className="space-y-2">{taskStats.pendingTasks.map(t => (<div key={t.id} className="flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-emerald-200 transition-colors"><div className="mt-0.5"><AlertCircle size={16} className="text-amber-500"/></div><div><p className="text-xs md:text-sm font-black text-slate-800 uppercase leading-tight">{t.title}</p><p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">DUE: {new Date(t.due_date).toLocaleDateString('en-GB', {day:'numeric', month:'short'})}</p></div></div>))}</div>
                       ) : (
                           <div className="text-center py-10 md:py-14 text-slate-300 flex flex-col items-center"><CheckCircle size={40} className="mb-4 text-emerald-500 opacity-20"/><p className="text-xs font-black uppercase tracking-[0.2em]">All Duties Satisfied</p></div>
                       )}
@@ -202,7 +202,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               {areTasksOpen && (
                   <div className="p-4 md:p-5 bg-white border-t-2 border-slate-100 max-h-64 overflow-y-auto scrollbar-hide animate-in slide-in-from-top-4">
                       {taskStats.pendingHealth.length > 0 ? (
-                          <div className="space-y-2">{taskStats.pendingHealth.map(t => (<div key={t.id} className="flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-rose-200 transition-colors"><div className="mt-0.5"><Heart size={16} className="text-rose-500"/></div><div><p className="text-xs md:text-sm font-black text-slate-800 uppercase leading-tight">{t.title}</p><p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">MANDATORY: {new Date(t.dueDate).toLocaleDateString('en-GB', {day:'numeric', month:'short'})}</p></div></div>))}</div>
+                          <div className="space-y-2">{taskStats.pendingHealth.map(t => (<div key={t.id} className="flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-rose-200 transition-colors"><div className="mt-0.5"><Heart size={16} className="text-rose-500"/></div><div><p className="text-xs md:text-sm font-black text-slate-800 uppercase leading-tight">{t.title}</p><p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">MANDATORY: {new Date(t.due_date).toLocaleDateString('en-GB', {day:'numeric', month:'short'})}</p></div></div>))}</div>
                       ) : (
                           <div className="text-center py-10 md:py-14 text-slate-300 flex flex-col items-center"><Heart size={40} className="mb-4 text-rose-300 opacity-20"/><p className="text-xs font-black uppercase tracking-[0.2em]">Collection Stable</p></div>
                       )}
@@ -266,7 +266,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                                   <td className={`px-4 md:px-6 py-4 border-b border-slate-100 sticky z-10 bg-inherit shadow-[4px_0_10px_rgba(0,0,0,0.03)] transition-colors group-hover:bg-emerald-50/60 ${sortOption === 'custom' && !isOrderLocked ? 'left-10' : 'left-0'}`}>
                                       <div className="flex items-center gap-3">
                                           <div className="hidden lg:block w-10 h-10 rounded-xl bg-slate-100 border-2 border-white shadow-sm overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
-                                              <img src={animal.imageUrl} className="w-full h-full object-cover" alt={animal.name} />
+                                              <img src={animal.image_url} className="w-full h-full object-cover" alt={animal.name} />
                                           </div>
                                           <div className="min-w-0">
                                               <p className="font-black text-slate-900 uppercase tracking-tight truncate max-w-[150px]">{animal.name}</p>
@@ -327,7 +327,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
       
       {isCreateAnimalModalOpen && (
-          <AnimalFormModal isOpen={isCreateAnimalModalOpen} onClose={() => setIsCreateAnimalModalOpen(false)} locations={locations} addAnimal={addAnimal} />
+          <AnimalFormModal isOpen={isCreateAnimalModalOpen} onClose={() => setIsCreateAnimalModalOpen(false)} />
       )}
       
       {currentUser?.role === UserRole.ADMIN && (

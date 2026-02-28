@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -7,7 +7,7 @@ export default function LoginScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [isConfigured, setIsConfigured] = useState(true);
-  const { signInWithEmail } = useAuth();
+  const { signInWithEmail } = useAuthStore();
 
   useEffect(() => {
     if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {

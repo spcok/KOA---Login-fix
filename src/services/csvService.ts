@@ -93,22 +93,22 @@ export const exportAnimalsToCSV = (animals: Animal[]): string => {
   animals.forEach(animal => {
     if (animal.logs.length === 0) {
       rows.push([
-        animal.id, animal.name, animal.species, escapeCSV(animal.latinName), animal.category, animal.dob, animal.location,
-        escapeCSV(animal.description), escapeCSV(animal.specialRequirements), 
-        animal.summerWeight, animal.winterWeight, animal.flyingWeight, escapeCSV(animal.imageUrl), escapeCSV(animal.ringNumber),
-        animal.targetDayTemp, animal.targetNightTemp, animal.targetHumidityMin, animal.targetHumidityMax, escapeCSV(animal.mistingFrequency), escapeCSV(animal.waterType),
+        animal.id, animal.name, animal.species, escapeCSV(animal.latin_name), animal.category, animal.dob, animal.location,
+        escapeCSV(animal.description), escapeCSV(animal.special_requirements), 
+        animal.summer_weight_g, animal.winter_weight_g, animal.flying_weight_g, escapeCSV(animal.image_url), escapeCSV(animal.ring_number),
+        animal.target_day_temp_c, animal.target_night_temp_c, animal.target_humidity_min_percent, animal.target_humidity_max_percent, escapeCSV(animal.misting_frequency), escapeCSV(animal.water_type),
         '', '', '', '', '', '', '', '', '', '', ''
       ].join(','));
     } else {
       animal.logs.forEach(log => {
         rows.push([
-          animal.id, animal.name, animal.species, escapeCSV(animal.latinName), animal.category, animal.dob, animal.location,
-          escapeCSV(animal.description), escapeCSV(animal.specialRequirements), 
-          animal.summerWeight, animal.winterWeight, animal.flyingWeight, escapeCSV(animal.imageUrl), escapeCSV(animal.ringNumber),
-          animal.targetDayTemp, animal.targetNightTemp, animal.targetHumidityMin, animal.targetHumidityMax, escapeCSV(animal.mistingFrequency), escapeCSV(animal.waterType),
-          log.id, log.date, log.type, escapeCSV(log.value), escapeCSV(log.notes),
-          escapeCSV(log.healthType), escapeCSV(log.condition), escapeCSV(log.bcs),
-          escapeCSV(log.featherCondition), escapeCSV(log.userInitials), escapeCSV(log.attachmentUrl)
+          animal.id, animal.name, animal.species, escapeCSV(animal.latin_name), animal.category, animal.dob, animal.location,
+          escapeCSV(animal.description), escapeCSV(animal.special_requirements), 
+          animal.summer_weight_g, animal.winter_weight_g, animal.flying_weight_g, escapeCSV(animal.image_url), escapeCSV(animal.ring_number),
+          animal.target_day_temp_c, animal.target_night_temp_c, animal.target_humidity_min_percent, animal.target_humidity_max_percent, escapeCSV(animal.misting_frequency), escapeCSV(animal.water_type),
+          log.id, log.log_date, log.log_type, escapeCSV(log.value), escapeCSV(log.notes),
+          escapeCSV(log.health_record_type), escapeCSV(log.condition), escapeCSV(log.bcs),
+          escapeCSV(log.feather_condition), escapeCSV(log.created_by), escapeCSV(log.attachment_url)
         ].join(','));
       });
     }
@@ -136,26 +136,42 @@ export const parseCSVToAnimals = (csvContent: string): Animal[] => {
         id,
         name: clean(values[1]) || 'Unknown',
         species: clean(values[2]) || 'Unknown',
-        latinName: clean(values[3]) || undefined,
+        latin_name: clean(values[3]) || undefined,
         category: (clean(values[4]) as AnimalCategory) || AnimalCategory.OWLS,
-        dob: clean(values[5]) || new Date().toISOString(),
+        dob: new Date(clean(values[5]) || new Date().toISOString()),
         location: clean(values[6]) || 'Unassigned',
         description: clean(values[7]),
-        specialRequirements: clean(values[8]),
-        summerWeight: Number(clean(values[9])) || undefined,
-        winterWeight: Number(clean(values[10])) || undefined,
-        flyingWeight: Number(clean(values[11])) || undefined,
-        imageUrl: clean(values[12]),
-        ringNumber: clean(values[13]) || undefined,
-        targetDayTemp: Number(clean(values[14])) || undefined,
-        targetNightTemp: Number(clean(values[15])) || undefined,
-        targetHumidityMin: Number(clean(values[16])) || undefined,
-        targetHumidityMax: Number(clean(values[17])) || undefined,
-        mistingFrequency: clean(values[18]) || undefined,
-        waterType: clean(values[19]) || undefined,
-        weightUnit: 'g',
+        special_requirements: clean(values[8]),
+        summer_weight_g: Number(clean(values[9])) || undefined,
+        winter_weight_g: Number(clean(values[10])) || undefined,
+        flying_weight_g: Number(clean(values[11])) || undefined,
+        image_url: clean(values[12]),
+        ring_number: clean(values[13]) || undefined,
+        target_day_temp_c: Number(clean(values[14])) || undefined,
+        target_night_temp_c: Number(clean(values[15])) || undefined,
+        target_humidity_min_percent: Number(clean(values[16])) || undefined,
+        target_humidity_max_percent: Number(clean(values[17])) || undefined,
+        misting_frequency: clean(values[18]) || undefined,
+        water_type: clean(values[19]) || undefined,
+        weight_unit: 'g',
         logs: [],
-        documents: []
+        documents: [],
+        created_at: new Date(),
+        updated_at: new Date(),
+        created_by: 'system',
+        last_modified_by: 'system',
+        sex: 'Unknown',
+        is_dob_unknown: false,
+        has_no_id: false,
+        acquisition_date: new Date(),
+        origin: 'Unknown',
+        is_venomous: false,
+        hazard_rating: 'None' as any,
+        red_list_status: 'NE' as any,
+        archived: false,
+        is_quarantine: false,
+        display_order: 0,
+        is_group_animal: false
       });
     }
 
@@ -168,17 +184,20 @@ export const parseCSVToAnimals = (csvContent: string): Animal[] => {
         
         animal.logs.push({
           id: logId,
-          date: validDate,
-          type: (clean(values[22]) as LogType) || LogType.GENERAL,
+          log_date: new Date(validDate),
+          log_type: (clean(values[22]) as LogType) || LogType.GENERAL,
           value: clean(values[23]),
           notes: clean(values[24]),
-          timestamp: new Date(validDate).getTime(),
-          healthType: (clean(values[25]) as HealthRecordType) || undefined,
+          health_record_type: (clean(values[25]) as HealthRecordType) || undefined,
           condition: (clean(values[26]) as HealthCondition) || undefined,
           bcs: Number(clean(values[27])) || undefined,
-          featherCondition: clean(values[28]) || undefined,
-          userInitials: clean(values[29]) || undefined,
-          attachmentUrl: clean(values[30]) || undefined
+          feather_condition: clean(values[28]) || undefined,
+          created_by: clean(values[29]) || 'system',
+          attachment_url: clean(values[30]) || undefined,
+          animal_id: id,
+          created_at: new Date(),
+          updated_at: new Date(),
+          last_modified_by: 'system'
         });
       }
     }
@@ -246,14 +265,30 @@ export const parseSmartCSV = (csvContent: string, currentAnimals: Animal[], defa
               name: name,
               species: idx.species > -1 ? clean(values[idx.species]) : 'Unknown',
               category: idx.category > -1 ? (clean(values[idx.category]) as AnimalCategory || defaultCategory) : defaultCategory,
-              dob: new Date().toISOString(),
+              dob: new Date(),
               location: 'Unknown',
               description: 'Imported Record',
-              specialRequirements: '',
-              imageUrl: `https://picsum.photos/seed/${name.replace(/\s/g,'')}/400/400`,
-              weightUnit: 'g',
+              special_requirements: '',
+              image_url: `https://picsum.photos/seed/${name.replace(/\s/g,'')}/400/400`,
+              weight_unit: 'g',
               logs: [],
-              documents: []
+              documents: [],
+              created_at: new Date(),
+              updated_at: new Date(),
+              created_by: 'system',
+              last_modified_by: 'system',
+              sex: 'Unknown',
+              is_dob_unknown: false,
+              has_no_id: false,
+              acquisition_date: new Date(),
+              origin: 'Unknown',
+              is_venomous: false,
+              hazard_rating: 'None' as any,
+              red_list_status: 'NE' as any,
+              archived: false,
+              is_quarantine: false,
+              display_order: 0,
+              is_group_animal: false
           };
           animalsMap.set(name.toLowerCase(), animal);
       }
@@ -302,20 +337,23 @@ export const parseSmartCSV = (csvContent: string, currentAnimals: Animal[], defa
           if (!Number.isNaN(grams) && (grams > 0 || valStr)) {
               newLog = {
                   id: `log_${timestamp}_w_${Math.random().toString(36).substr(2,4)}`,
-                  date: dateTime,
-                  type: LogType.WEIGHT,
+                  log_date: new Date(dateTime),
+                  log_type: LogType.WEIGHT,
                   value: valStr || grams.toFixed(1),
-                  weightGrams: grams > 0 ? grams : undefined,
+                  weight_grams: grams > 0 ? grams : undefined,
                   notes: baseNotes,
-                  userInitials,
-                  timestamp
+                  created_by: userInitials,
+                  animal_id: animal.id,
+                  created_at: new Date(),
+                  updated_at: new Date(),
+                  last_modified_by: userInitials
               };
           }
       } 
       // ... Add other modes similarly protected ...
       
       if (newLog) {
-          const exists = animal.logs.some(l => l.date === newLog?.date && l.type === newLog.type);
+          const exists = animal.logs.some(l => l.log_date.getTime() === newLog?.log_date.getTime() && l.log_type === newLog.log_type);
           if (!exists) animal.logs.push(newLog);
       }
   }

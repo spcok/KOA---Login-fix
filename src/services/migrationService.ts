@@ -16,11 +16,28 @@ export const migrateLegacyData = async (userId: string, jsonData: any[]): Promis
       species: legacyAnimal.species || 'Unknown',
       category: legacyAnimal.category || 'uncategorized',
       created_by: userId,
-      created_at: new Date().toISOString(),
+      created_at: new Date(),
+      updated_at: new Date(),
+      last_modified_by: userId,
       // @ts-ignore
       sex: legacyAnimal.sex || 'Unknown',
-      hatch_date: legacyAnimal.hatch_date || null,
+      dob: legacyAnimal.hatch_date ? new Date(legacyAnimal.hatch_date) : new Date(),
+      is_dob_unknown: !legacyAnimal.hatch_date,
       weight_unit: 'g',
+      location: 'Unknown',
+      acquisition_date: new Date(),
+      origin: 'Unknown',
+      is_venomous: false,
+      hazard_rating: 'None' as any,
+      red_list_status: 'NE' as any,
+      archived: false,
+      is_quarantine: false,
+      display_order: 0,
+      is_group_animal: false,
+      has_no_id: false,
+      image_url: '',
+      logs: [],
+      documents: []
     };
     animalsToCreate.push(newAnimal);
 
@@ -29,13 +46,15 @@ export const migrateLegacyData = async (userId: string, jsonData: any[]): Promis
         const newLog: LogEntry = {
           id: uuidv4(),
           animal_id: newAnimalId,
-          timestamp: legacyLog.timestamp || new Date().toISOString(),
-          type: legacyLog.type || 'note',
+          log_date: legacyLog.timestamp ? new Date(legacyLog.timestamp) : new Date(),
+          log_type: legacyLog.type || 'GENERAL',
+          value: legacyLog.value || '',
           notes: legacyLog.notes || '',
           created_by: userId,
-          weight: legacyLog.weight || null,
-          weight_unit: legacyLog.weight_unit || 'g',
-          enclosure: legacyLog.enclosure || null,
+          weight_grams: legacyLog.weight || undefined,
+          created_at: new Date(),
+          updated_at: new Date(),
+          last_modified_by: userId
         };
         logsToCreate.push(newLog);
       }

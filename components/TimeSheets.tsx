@@ -2,11 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { TimeLogEntry, User, UserRole } from '@/types';
 import { Clock, Calendar, ArrowRight, Timer, Edit2, Trash2, X, AlertCircle } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const TimeSheets: React.FC = () => {
     const { timeLogs, users, deleteTimeLog, updateTimeLog } = useAppData();
-    const { profile: currentUser } = useAuth();
+    const { profile: currentUser } = useAuthStore();
     
     const [filterUserId, setFilterUserId] = useState<string>('ALL');
     const [filterDate, setFilterDate] = useState<string>('');

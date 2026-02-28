@@ -7,11 +7,11 @@ import { Download, LayoutList, ChevronRight, FileBarChart, Layers, Bird, Table2,
 import { DocumentService } from '@/src/services/DocumentService';
 import { formatWeightDisplay } from '@/src/services/weightUtils';
 import { useAppData } from '@/src/context/AppContext';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const Reports: React.FC = () => {
   const { animals, incidents = [], siteLogs = [], timeLogs = [], users = [], orgProfile, log_entries } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
 
   const [selectedSchemaId, setSelectedSchemaId] = useState<string>('DAILY_LOG');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);

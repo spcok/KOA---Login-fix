@@ -6,10 +6,10 @@ import {
   Settings, Clock, Scale, Utensils 
 } from 'lucide-react';
 import { UserRole } from '@/types';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const HelpCenter: React.FC = () => {
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   const [openSection, setOpenSection] = useState<string | null>('general');
 
   const isAdmin = currentUser?.role === UserRole.ADMIN;

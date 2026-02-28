@@ -4,13 +4,13 @@ import { Task, Animal, LogType, User, SiteLogEntry } from '@/types';
 import { CheckCircle2, Circle, Plus, Calendar, User as UserIcon, AlertCircle, ListTodo, X, Check, ClipboardList, UserCheck } from 'lucide-react';
 import AddEntryModal from './AddEntryModal';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const Tasks: React.FC = () => {
   const { 
     tasks, animals, addTask, updateTask, deleteTask, users = [], updateAnimal 
   } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
 
   const [filter, setFilter] = useState<'assigned' | 'pending' | 'completed'>('assigned');
   const [showAddModal, setShowAddModal] = useState(false);

@@ -4,12 +4,11 @@ import { db } from '@/src/db';
 import { createRecord, updateRecord, deleteRecord } from '@/src/services/dataService';
 import { Animal, LogEntry, Task, User, SiteLogEntry, Incident, FirstAidLogEntry, DailyRoundEntry, BCSData, AnimalMovement, OrganisationProfile, Contact, HolidayRequest, GlobalDocument, LogType, AnimalCategory } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
-import { useAuth } from './AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 import { DEFAULT_FOOD_OPTIONS, DEFAULT_FEED_METHODS, DEFAULT_EVENT_TYPES } from '@/constants';
 
 export const useAppDataValues = () => {
-  const authUser = useAuth().user;
-  const authProfile = useAuth().profile;
+  const { user: authUser, profile: authProfile } = useAuthStore();
 
   // Reactive data feeds from Dexie
   const animals = useLiveQuery(() => db.animals.toArray(), []) || [];
@@ -22,7 +21,10 @@ export const useAppDataValues = () => {
   const daily_round_entries = useLiveQuery(() => db.daily_round_entries.toArray(), []) || [];
   const bcs_data = useLiveQuery(() => db.bcs_data.toArray(), []) || [];
   const animal_movements = useLiveQuery(() => db.animal_movements.toArray(), []) || [];
-  const orgProfile = useLiveQuery(() => db.organisation_profile.get(1), []) || undefined;
+  const orgProfile = useLiveQuery(async () => {
+    const profiles = await db.organisation_profile.toArray();
+    return profiles[0];
+  }, []) || undefined;
   const contacts = useLiveQuery(() => db.contacts.toArray(), []) || [];
   const holidayRequests = useLiveQuery(() => db.holiday_requests.toArray(), []) || [];
   const documents = useLiveQuery(() => db.documents.toArray(), []) || [];
@@ -171,7 +173,7 @@ export const useAppDataValues = () => {
 
   const updateOrgProfile = async (updates: Partial<OrganisationProfile>) => {
     if (!currentUser) throw new Error('User not authenticated');
-    await updateRecord('organisation_profile', db.organisation_profile, updates.id!.toString(), { ...updates, updated_at: new Date(), last_modified_by: currentUser.id });
+    await updateRecord('organisation_profile', db.organisation_profile, updates.id?.toString() || '1', { ...updates, updated_at: new Date(), last_modified_by: currentUser.id });
   };
 
   const addContact = async (contact: Omit<Contact, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {

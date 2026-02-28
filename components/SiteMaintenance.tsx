@@ -3,11 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { SiteLogEntry, User } from '@/types';
 import { Wrench, Plus, Filter, FileText, CheckCircle, Clock, AlertTriangle, Trash2, Calendar, MapPin, PoundSterling, X, Printer, Edit2 } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const SiteMaintenance: React.FC = () => {
   const { siteLogs, addSiteLog, deleteSiteLog, updateSiteLog } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
   
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'Pending' | 'In Progress' | 'Completed'>('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);

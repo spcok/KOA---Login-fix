@@ -138,7 +138,7 @@ export async function syncAllTables(): Promise<void> {
     { name: 'users', table: db.users },
     { name: 'animals', table: db.animals },
     { name: 'log_entries', table: db.log_entries },
-    { name: 'global_documents', table: db.global_documents },
+    { name: 'documents', table: db.documents },
     { name: 'tasks', table: db.tasks },
     { name: 'site_log_entries', table: db.site_log_entries },
     { name: 'incidents', table: db.incidents },

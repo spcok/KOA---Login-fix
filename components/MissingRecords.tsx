@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { Animal, AnimalCategory, LogType } from '@/types';
 import { AlertOctagon, CheckCircle2, Scale, Utensils, Calendar } from 'lucide-react';
 import { useAppData } from '../src/context/AppContext';
-import { useAuth } from '../src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 const MissingRecords: React.FC = () => {
   const { animals, log_entries } = useAppData();

@@ -68,12 +68,12 @@ const DailyLog: React.FC<DailyLogProps> = ({ activeCategory, setActiveCategory, 
       const existingLog = getTodayLog(animal, type);
       if (existingLog) return; 
 
-      const newEntry: Partial<LogEntry> = {
+      const newEntry = {
           animal_id: animal.id,
           log_date: new Date(`${viewDate}T${new Date().toTimeString().slice(0, 5)}:00`),
           log_type: type,
           value: `Completed - ${type}`,
-      };
+      } as Omit<LogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>;
       
       addLogEntry(animal.id, newEntry);
   };

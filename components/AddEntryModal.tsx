@@ -5,7 +5,7 @@ import { X, Check, Loader2, Trash2 } from 'lucide-react';
 import { BCSSelector } from './BCSSelector';
 import { parseWeightInputToGrams } from '@/src/services/weightUtils';
 import { useAppData } from '@/src/context/AppContext';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuthStore } from '@/src/store/authStore';
 
 interface AddEntryModalProps {
   isOpen: boolean;
@@ -49,7 +49,7 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({
   isOpen, onClose, onDelete, animal, initialType = LogType.FEED, existingLog, foodOptions, defaultNotes, initialDate 
 }) => {
   const { addLogEntry, updateLogEntry } = useAppData();
-  const { profile: currentUser } = useAuth();
+  const { profile: currentUser } = useAuthStore();
 
   const [logFormType, setLogFormType] = useState<LogType>(initialType);
   const [logDate, setLogDate] = useState('');

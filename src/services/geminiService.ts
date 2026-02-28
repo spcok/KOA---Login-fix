@@ -274,7 +274,7 @@ export const generateSectionSummary = async (category: AnimalCategory, animals: 
   const context = animals.map(a => ({
     name: a.name,
     species: a.species,
-    lastWeight: a.logs?.find(l => l.type === LogType.WEIGHT)?.value,
+    lastWeight: a.logs?.find(l => l.log_type === LogType.WEIGHT)?.value,
   }));
   try {
     const response = await withRetry<GenerateContentResponse>(() => ai.models.generateContent({
@@ -287,7 +287,7 @@ export const generateSectionSummary = async (category: AnimalCategory, animals: 
 
 export const analyzeHealthHistory = async (animal: Animal): Promise<string> => {
   const ai = getAi();
-  const healthLogs = (animal.logs || []).filter(l => l.type === LogType.HEALTH || l.type === LogType.WEIGHT).slice(0, 15);
+  const healthLogs = (animal.logs || []).filter(l => l.log_type === LogType.HEALTH || l.log_type === LogType.WEIGHT).slice(0, 15);
   try {
     const response = await withRetry<GenerateContentResponse>(() => ai.models.generateContent({
       model: 'gemini-1.5-flash',
