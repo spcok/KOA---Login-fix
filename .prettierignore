@@ -1,0 +1,7 @@
+# Ignore artifacts
+dist
+node_modules
+coverage
+
+# Ignore config files
+/vite.config.ts

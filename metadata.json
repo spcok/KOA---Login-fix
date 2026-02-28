@@ -1,0 +1,7 @@
+{
+  "name": "Remix: Remix: KOA Manager -Phased rebuild - settings fix",
+  "description": "Comprehensive management system for Kent Owl Academy tracking animal weights, feeds, and health with AI insights.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
