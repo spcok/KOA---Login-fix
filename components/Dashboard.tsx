@@ -20,13 +20,13 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
     const { profile: currentUser } = useAuthStore();
   const {
-    animals, addAnimal, tasks
+    animals, addAnimal, tasks, log_entries
   } = useAppData();
   
   const [sortOption, setSortOption] = useState<'alpha-asc' | 'alpha-desc' | 'custom'>('alpha-asc');
   const [isOrderLocked, setIsOrderLocked] = useState(true);
   const toggleOrderLock = (val: boolean) => setIsOrderLocked(val);
-  const locations = useMemo(() => Array.from(new Set(animals.map((a: Animal) => a.location))), [animals]);
+  const locations = useMemo(() => Array.from(new Set((animals || []).map((a: Animal) => a.location))), [animals]);
   const reorderAnimals = (newOrder: Animal[]) => {
       // In a real app, we'd update the 'display_order' property on each animal
       console.log("Reordering not fully implemented in this refactor yet", newOrder);
@@ -51,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       }>();
 
       for (const animal of catAnimals) {
-          const logs = animal.logs || [] as LogEntry[];
+          const logs = (log_entries || []).filter(l => l.animal_id === animal.id);
           const weights: LogEntry[] = [];
           const feeds: LogEntry[] = [];
           
@@ -76,7 +76,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       }
 
       return { total, weighed, fed, animalData };
-  }, [animals, activeTab, viewDate]);
+  }, [animals, log_entries, activeTab, viewDate]);
 
   const taskStats = useMemo(() => ({
       pendingTasks: (tasks || []).filter((t: Task) => !t.completed && t.task_type !== LogType.HEALTH),

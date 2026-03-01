@@ -6,7 +6,7 @@ import { useAppData } from '../src/context/AppContext';
 import { useAuthStore } from '@/src/store/authStore';
 
 const Movements: React.FC = () => {
-  const { animals, updateAnimal, addMovement, deleteMovement } = useAppData();
+  const { animals, updateAnimal, log_entries, addLogEntry, updateLogEntry, deleteLogEntry } = useAppData();
   const { profile: currentUser } = useAuthStore();
   
   const [filterType, setFilterType] = useState<'ALL' | 'Acquisition' | 'Disposition' | 'Transfer'>('ALL');
@@ -21,17 +21,16 @@ const Movements: React.FC = () => {
   const [formNotes, setFormNotes] = useState('');
 
   const movementLogs = useMemo(() => {
-      const allLogs = animals.flatMap(animal => 
-          (animal.log_entries || [])
+      const allLogs = (log_entries || [])
             .filter(l => l.log_type === LogType.MOVEMENT)
-            .map(log => ({ ...log, animal }))
-      );
-      const filtered = filterType === 'ALL' ? allLogs : allLogs.filter(l => l.movement_type === filterType);
+            .map(log => ({ log, animal: animals.find(a => a.id === log.animal_id) }))
+            .filter(item => item.animal);
+      const filtered = filterType === 'ALL' ? allLogs : allLogs.filter(l => l.log.movement_type === filterType);
       
       return filtered.sort((a, b) => {
-          return new Date(b.log_date).getTime() - new Date(a.log_date).getTime();
+          return new Date(b.log.log_date).getTime() - new Date(a.log.log_date).getTime();
       });
-  }, [animals, filterType]);
+  }, [animals, log_entries, filterType]);
 
   const openModal = (logWrapper?: { log: LogEntry, animal: Animal }) => {
       if (logWrapper) {
@@ -54,27 +53,31 @@ const Movements: React.FC = () => {
       setIsModalOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       if (!formAnimalId || !updateAnimal) return;
       const animal = animals.find(a => a.id === formAnimalId);
       if (!animal) return;
 
       const movementLog: Omit<LogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'> = {
+          animal_id: formAnimalId,
           log_date: new Date(formDate),
           log_type: LogType.MOVEMENT,
           value: `${formType}: ${formSource || 'Internal'} to ${formDest || 'Internal'}`,
           notes: formNotes,
-          movement_type: formType as MovementType,
+          user_initials: currentUser?.initials || 'SYS',
+          movement_type: formType as any,
           source: formSource,
           destination: formDest
       };
 
-      let updatedLogs = [...(animal.log_entries || [])];
-      if (editingLog) updatedLogs = updatedLogs.map(l => l.id === editingLog.log.id ? { ...l, ...movementLog } : l);
-      else updatedLogs.unshift(movementLog as LogEntry);
+      if (editingLog) {
+          await updateLogEntry({ ...editingLog.log, ...movementLog });
+      } else {
+          await addLogEntry(formAnimalId, movementLog);
+      }
 
-      updateAnimal({ ...animal, location: formDest || animal.location, log_entries: updatedLogs });
+      updateAnimal({ ...animal, location: formDest || animal.location });
       setIsModalOpen(false);
   };
 
@@ -107,7 +110,8 @@ const Movements: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                        {movementLogs.map(log => {
+                        {movementLogs.map(item => {
+                            const { log, animal } = item;
                             const isAcq = log.movement_type === 'Acquisition';
                             const isDisp = log.movement_type === 'Disposition';
                             return (
@@ -117,8 +121,8 @@ const Movements: React.FC = () => {
                                         <div className="text-[10px] font-black text-slate-300 mt-1 uppercase tracking-widest flex items-center gap-1"><UserIcon size={10}/> {log.user_initials}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="font-black text-slate-900 text-sm uppercase tracking-tight">{log.animal.name}</div>
-                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{log.animal.species}</div>
+                                        <div className="font-black text-slate-900 text-sm uppercase tracking-tight">{animal!.name}</div>
+                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{animal!.species}</div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${
@@ -138,7 +142,7 @@ const Movements: React.FC = () => {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => openModal({ log, animal: log.animal })} className="p-2 text-slate-400 hover:text-emerald-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-colors"><Edit2 size={14}/></button>
+                                            <button onClick={() => openModal({ log, animal: animal! })} className="p-2 text-slate-400 hover:text-emerald-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-colors"><Edit2 size={14}/></button>
                                         </div>
                                     </td>
                                 </tr>

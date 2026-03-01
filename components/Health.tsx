@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useTransition } from 'react';
 // Fix: Changed OrganizationProfile to OrganisationProfile
 import { Animal, LogType, LogEntry, HealthRecordType, HealthCondition, AnimalCategory, Task, User, UserRole, OrganisationProfile, ShellQuality } from '@/types';
-import { Heart, Activity, FileText, Plus, X, Sparkles, Loader2, Check, BarChart3, Egg } from 'lucide-react';
+import { Heart, Activity, FileText, Plus, X, Sparkles, Loader2, Check, BarChart3, Egg, ShieldCheck } from 'lucide-react';
 import { analyzeHealthHistory, analyzeCollectionHealth } from '@/src/services/geminiService';
 import ReactMarkdown from 'react-markdown';
 import AddEntryModal from './AddEntryModal';
@@ -18,7 +18,7 @@ interface HealthProps {
 
 const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
   // FIX: Get data and actions from useAppData context instead of props.
-  const { animals, updateAnimal, tasks, addTask, updateTask, deleteTask, users, orgProfile, medical_records } = useAppData();
+  const { animals, updateAnimal, tasks, addTask, updateTask, deleteTask, users, medical_records, log_entries, addLogEntry, updateLogEntry, deleteLogEntry } = useAppData();
   const { profile: currentUser } = useAuthStore();
 
   const [activeTab, setActiveTab] = useState<'medical' | 'quarantine' | 'mar' | 'repro'>('medical');
@@ -65,19 +65,17 @@ const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
 
   const handleDeleteLog = (logId: string, animal: Animal) => {
     if (window.confirm('Permanently purge clinical record?')) {
-        const updatedLogs = (animal.log_entries || []).filter(l => l.id !== logId);
-        updateAnimal({ ...animal, log_entries: updatedLogs });
+        deleteLogEntry(logId);
     }
   };
 
   const handleSaveMedicalRecord = (healthLog: LogEntry, animalId: string, isDeceased: boolean) => {
       const animal = animals.find(a => a.id === animalId);
       if (animal) {
-          updateAnimal({ 
-              ...animal, 
-              log_entries: [healthLog, ...(animal.log_entries || [])], 
-              is_archived: isDeceased 
-          });
+          addLogEntry(animalId, healthLog);
+          if (isDeceased) {
+              updateAnimal({ ...animal, is_archived: true });
+          }
       }
   };
 
@@ -90,7 +88,7 @@ const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
 
     const logs: (LogEntry & { animal: Animal })[] = [];
     for (const animal of relevantAnimals) {
-        const alogs = animal.log_entries || [];
+        const alogs = (log_entries || []).filter(l => l.animal_id === animal.id);
         for (const log of alogs as LogEntry[]) {
             if (log.log_type === LogType.HEALTH) {
                 logs.push({ ...log, animal });
@@ -119,9 +117,9 @@ const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
 
   const getReproStats = (animal: Animal) => {
       const currentYear = new Date().getFullYear();
-      const eggLogs = (animal.log_entries || []).filter((l: LogEntry) => l.log_type === LogType.EGG);
+      const eggLogs = (log_entries || []).filter((l: LogEntry) => l.animal_id === animal.id && l.log_type === LogType.EGG);
       const seasonCount = eggLogs
-          .filter((l: LogEntry) => l.log_date.getFullYear() === currentYear)
+          .filter((l: LogEntry) => new Date(l.log_date).getFullYear() === currentYear)
           .reduce((acc: number, l: LogEntry) => acc + (l.egg_count || 0), 0);
       const lastClutch = eggLogs.length > 0 ? eggLogs[0].log_date : null;
       return { seasonCount, lastClutch, totalLogs: eggLogs.length };
@@ -223,7 +221,7 @@ const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
                             <label className="block text-[10px] font-black text-slate-400 uppercase mb-1.5 ml-1 tracking-widest">Patient Search</label>
                             <select value={filterAnimalId} onChange={(e) => setFilterAnimalId(e.target.value)} className={inputClass}>
                                 <option value="ALL">All Active Patients</option>
-                                {animals.filter((a: Animal) => filterCategory === 'ALL' || a.category === filterCategory).map((a: Animal) => <option key={a.id} value={a.id}>{a.name} ({a.species})</option>)}
+                                {(animals || []).filter((a: Animal) => filterCategory === 'ALL' || a.category === filterCategory).map((a: Animal) => <option key={a.id} value={a.id}>{a.name} ({a.species})</option>)}
                             </select>
                         </div>
                     </div>
@@ -488,8 +486,7 @@ const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
             isOpen={isModalOpen} 
             onClose={() => { setIsModalOpen(false); setEditingLog(undefined); setEditingAnimal(undefined); }} 
             onSave={(entry) => {
-                const updatedLogs = editingAnimal.log_entries.map(l => l.id === entry.id ? entry : l);
-                updateAnimal({ ...editingAnimal, log_entries: updatedLogs });
+                updateLogEntry(entry);
                 setIsModalOpen(false);
                 setEditingLog(undefined);
                 setEditingAnimal(undefined);
@@ -520,8 +517,7 @@ const Health: React.FC<HealthProps> = ({ onSelectAnimal }) => {
               isOpen={isEggLogOpen}
               onClose={() => { setIsEggLogOpen(false); setEggLogAnimal(null); }}
               onSave={(entry) => {
-                 const updatedLogs = [entry, ...(eggLogAnimal.log_entries || [])];
-                 updateAnimal({ ...eggLogAnimal, log_entries: updatedLogs });
+                 addLogEntry(eggLogAnimal.id, entry);
                  // Note: AddEntryModal automatically calls onClose after onSave if implemented correctly, but we manage state here too.
                  setIsEggLogOpen(false);
                  setEggLogAnimal(null);

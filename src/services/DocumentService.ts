@@ -255,5 +255,25 @@ export const DocumentService = {
         const doc = new Document({ sections: [{ headers: { default: header }, properties: { page: { margin: MARGINS } }, children: [...incidentTables, ...signature] }] });
         const blob = await Packer.toBlob(doc);
         FileSaver.saveAs(blob, `Incident_Log_${new Date().toISOString().split('T')[0]}.docx`);
+    },
+
+    generateConservationEducationLog: async (logs: any[], profile: OrganisationProfile | null, dateRangeText: string, currentUser?: User | null, reportTitle: string = "CONSERVATION & EDUCATION LOG") => {
+        const header = await DocumentService.createHeader(profile, reportTitle, dateRangeText);
+        const signature = await DocumentService.createSignatureBlock(currentUser);
+        const tableRows = [
+            new TableRow({ tableHeader: true, children: ["Date", "Type", "Activity Name", "Description / Impact", "Staff"].map(text => 
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text, bold: true, size: 24, font: "Arial", color: "FFFFFF" })] })], shading: { fill: "1F2937" }, margins: { top: 100, bottom: 100, left: 100, right: 100 } })
+            )}),
+            ...logs.map(l => new TableRow({ children: [
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: l.date, size: 22, font: "Arial" })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: l.type, bold: true, size: 22, font: "Arial" })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: l.title, bold: true, size: 22, font: "Arial" })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: l.description, size: 20, font: "Arial" })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: l.initials || "-", size: 22, font: "Arial" })] })] }),
+            ]}))
+        ];
+        const doc = new Document({ styles: { default: { document: { run: { font: "Arial", size: 22, color: COLOR_BLACK } } } }, sections: [{ headers: { default: header }, properties: { page: { margin: MARGINS } }, children: [new Table({ rows: tableRows, width: { size: 100, type: WidthType.PERCENTAGE } }), ...signature] }] });
+        const blob = await Packer.toBlob(doc);
+        FileSaver.saveAs(blob, `Conservation_Education_Log_${new Date().toISOString().split('T')[0]}.docx`);
     }
 };

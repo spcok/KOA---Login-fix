@@ -119,7 +119,7 @@ const FlightRecords: React.FC = () => {
                 }
         });
         return logs.sort((a: any, b: any) => new Date(b.log.log_date).getTime() - new Date(a.log.log_date).getTime());
-    }, [animals]);
+    }, [animals, log_entries]);
 
     // Handle GPX loading
     useEffect(() => {

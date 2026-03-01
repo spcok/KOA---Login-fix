@@ -196,8 +196,13 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({
 
     if (existingLog) {
       await updateLogEntry({ ...existingLog, ...baseEntry });
+      if (onSave) onSave({ ...existingLog, ...baseEntry });
     } else {
+      // For new entries, we don't have the ID yet if it's generated in addLogEntry
+      // But we can pass the baseEntry or let the context handle it.
+      // Actually, addLogEntry returns void in the current implementation.
       await addLogEntry(animal.id, baseEntry);
+      if (onSave) onSave({ ...baseEntry, id: 'temp-id', created_at: new Date() } as any);
     }
     
     onClose();

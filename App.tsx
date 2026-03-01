@@ -4,6 +4,7 @@ import LoginScreen from './components/LoginScreen';
 import { Loader2 } from 'lucide-react';
 import { useAuthStore } from './src/store/authStore';
 import { AppProvider } from './src/context/AppContext';
+import { syncAllTables } from './src/services/dataService';
 
 // Initialize the store outside the React tree to avoid lifecycle race conditions
 useAuthStore.getState().initialize();
@@ -33,6 +34,12 @@ function AppContent() {
   const { user, profile, isLoading, isInitialized, signOut } = useAuthStore();
   const [view, setView] = useState<string>('dashboard');
   const [fontScale, setFontScale] = useState(100);
+
+  useEffect(() => {
+    if (user && profile) {
+      syncAllTables().catch(console.error);
+    }
+  }, [user, profile]);
 
   if (!isInitialized || isLoading) {
     return <GlobalSpinner />;

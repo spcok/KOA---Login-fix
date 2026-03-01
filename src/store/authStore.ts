@@ -28,6 +28,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     console.log("[AUTH STORE] Initializing...");
     
+    // Subscribe to auth state changes
     supabase.auth.onAuthStateChange(async (event, session) => {
       console.log(`[AUTH STORE] Event Triggered: ${event}`);
       
@@ -67,13 +68,52 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
             if (result.error) throw result.error;
             
+            const profile = result.data as AppUser;
             set({ 
               session, 
               user: session.user, 
-              profile: result.data as AppUser,
+              profile,
               isInitialized: true,
               isLoading: false
             });
+
+            // Set up Realtime subscription for this user's profile
+            supabase
+              .channel(`public:users:id=eq.${session.user.id}`)
+              .on('postgres_changes', { 
+                event: 'UPDATE', 
+                schema: 'public', 
+                table: 'users', 
+                filter: `id=eq.${session.user.id}` 
+              }, async (payload) => {
+                const newProfile = payload.new as AppUser;
+                const oldProfile = get().profile;
+
+                console.log("[AUTH STORE] Realtime update received:", newProfile);
+
+                // Check for role/permission downgrade
+                const isDowngraded = oldProfile && (
+                  (oldProfile.role === 'Admin' && newProfile.role !== 'Admin') ||
+                  (!newProfile.active)
+                );
+
+                if (isDowngraded) {
+                  console.warn("[AUTH STORE] Permission downgrade detected. Wiping cache and logging out.");
+                  await db.delete(); // Wipe Dexie
+                  await get().signOut();
+                  window.location.reload();
+                  return;
+                }
+
+                // Refresh session to get new JWT claims if role changed
+                if (oldProfile?.role !== newProfile.role) {
+                  await supabase.auth.refreshSession();
+                }
+
+                set({ profile: newProfile });
+              })
+              .subscribe();
+
           } catch (err) {
             console.log('[AUTH STORE] Failed to fetch profile (expected if offline/no DB):', err instanceof Error ? err.message : err);
             

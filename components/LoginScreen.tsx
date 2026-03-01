@@ -28,7 +28,11 @@ export default function LoginScreen() {
 
     if (signInError) {
       console.error('[AUTH] Sign-in error:', signInError.message);
-      setError(signInError.message || 'Invalid login credentials');
+      if (signInError.message === 'Invalid login credentials') {
+        setError('Incorrect email or password. Please try again.');
+      } else {
+        setError(signInError.message || 'An error occurred during sign-in.');
+      }
       setIsPending(false);
     } else {
       console.log('[AUTH] Sign-in successful for:', email);
@@ -45,11 +49,11 @@ export default function LoginScreen() {
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-teal-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-30 animate-blob animation-delay-2000"></div>
         <div className="relative z-10 text-center flex flex-col items-center">
           <div className="w-48 h-48 mb-8 flex items-center justify-center drop-shadow-2xl hover:scale-105 transition-transform duration-500">
-            <img src="/koa-logo.png" alt="KOA Manager Logo" className="w-full h-full object-contain" />
+            <img src="/koa-logo.png" alt="ZooGuard Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-5xl font-extrabold text-white tracking-tight mb-6 drop-shadow-md">KOA Manager</h1>
+          <h1 className="text-5xl font-extrabold text-white tracking-tight mb-6 drop-shadow-md">ZooGuard</h1>
           <p className="text-emerald-100/80 text-lg max-w-md leading-relaxed font-medium">
-            Securely manage your collection, medical records, and daily site operations from one intelligent dashboard.
+            Comprehensive compliance and management for the Zoo Licensing Act 1981.
           </p>
         </div>
       </div>
@@ -57,7 +61,7 @@ export default function LoginScreen() {
         <div className="max-w-md w-full space-y-8">
           <div className="text-center lg:hidden mb-8 flex flex-col items-center">
              <img src="/koa-logo.png" alt="Logo" className="w-24 h-24 mb-4 object-contain" />
-            <h2 className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-500 tracking-tight">KOA Manager</h2>
+            <h2 className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-500 tracking-tight">ZooGuard</h2>
           </div>
           <div>
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Welcome back</h2>

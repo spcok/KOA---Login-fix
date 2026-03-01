@@ -9,7 +9,7 @@ import { useAppData } from '../src/context/AppContext';
 import { useAuthStore } from '@/src/store/authStore';
 
 const Quarantine: React.FC = () => {
-  const { animals, updateAnimal, addLogEntry } = useAppData();
+  const { animals, updateAnimal, addLogEntry, log_entries } = useAppData();
   const { profile: currentUser } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -21,12 +21,13 @@ const Quarantine: React.FC = () => {
   const quarantineAnimals = animals.filter((a: Animal) => a.is_quarantine);
   const healthyAnimals = animals.filter((a: Animal) => !a.is_quarantine && !a.archived);
 
-  const handleMoveToQuarantine = (e: React.FormEvent) => {
+  const handleMoveToQuarantine = async (e: React.FormEvent) => {
       e.preventDefault();
       const animal = animals.find((a: Animal) => a.id === selectedAnimalId);
       if (!animal) return;
 
       const log: Omit<LogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'> = {
+          animal_id: animal.id,
           log_date: new Date(date),
           log_type: LogType.HEALTH,
           health_record_type: HealthRecordType.QUARANTINE,
@@ -39,20 +40,21 @@ const Quarantine: React.FC = () => {
           ...animal,
           is_quarantine: true,
           quarantine_start_date: new Date(date),
-          quarantine_reason: reason,
-          log_entries: [log as LogEntry, ...(animal.log_entries || [])]
+          quarantine_reason: reason
       };
 
-      updateAnimal(updatedAnimal);
+      await addLogEntry(animal.id, log);
+      await updateAnimal(updatedAnimal);
       setIsModalOpen(false);
       setSelectedAnimalId('');
       setReason('');
   };
 
-  const handleRelease = (animal: Animal) => {
+  const handleRelease = async (animal: Animal) => {
       if (!window.confirm(`Release ${animal.name} from quarantine?`)) return;
 
       const log: Omit<LogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'> = {
+          animal_id: animal.id,
           log_date: new Date(),
           log_type: LogType.HEALTH,
           health_record_type: HealthRecordType.RELEASE,
@@ -65,11 +67,11 @@ const Quarantine: React.FC = () => {
           ...animal,
           is_quarantine: false,
           quarantine_start_date: undefined,
-          quarantine_reason: undefined,
-          log_entries: [log as LogEntry, ...(animal.log_entries || [])]
+          quarantine_reason: undefined
       };
 
-      updateAnimal(updatedAnimal);
+      await addLogEntry(animal.id, log);
+      await updateAnimal(updatedAnimal);
   };
 
   return (
@@ -119,10 +121,10 @@ const Quarantine: React.FC = () => {
                                 <div className="grid grid-cols-2 gap-2 text-xs">
                                     <div className="flex items-center gap-1 text-stone-600">
                                         <Thermometer size={12}/> 
-                                        {(animal.log_entries || []).find(l => l.log_type === LogType.TEMPERATURE)?.temperature || '-'}°C
+                                        {(log_entries || []).filter(l => l.animal_id === animal.id).find(l => l.log_type === LogType.TEMPERATURE)?.temperature || '-'}°C
                                     </div>
                                     <div className="text-right font-bold text-stone-700">
-                                        {(animal.log_entries || []).find(l => l.log_type === LogType.WEIGHT)?.value || '-'}
+                                        {(log_entries || []).filter(l => l.animal_id === animal.id).find(l => l.log_type === LogType.WEIGHT)?.value || '-'}
                                     </div>
                                 </div>
                             </div>

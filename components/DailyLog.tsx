@@ -26,9 +26,9 @@ const DailyLog: React.FC<DailyLogProps> = ({ activeCategory, setActiveCategory, 
   const [logType, setLogType] = useState<LogType>(LogType.WEIGHT);
   const [editingLog, setEditingLog] = useState<LogEntry | undefined>(undefined);
 
-  const animalsWithLogs = animals.map((animal: Animal) => ({
+  const animalsWithLogs = (animals || []).map((animal: Animal) => ({
     ...animal,
-    logs: log_entries.filter((log: LogEntry) => log.animal_id === animal.id)
+    logs: (log_entries || []).filter((log: LogEntry) => log.animal_id === animal.id)
   }));
 
   const [optimisticAnimals, setOptimisticAnimals] = useOptimistic(
@@ -178,7 +178,6 @@ const DailyLog: React.FC<DailyLogProps> = ({ activeCategory, setActiveCategory, 
                 const animal = (animals || []).find(a => a.id === selectedAnimalId);
                 if (animal) {
                     setOptimisticAnimals({ animalId: animal.id, log: entry });
-                    updateAnimal({ ...animal, logs: [entry, ...(animal.logs || []).filter((l: LogEntry) => l.id !== entry.id)] });
                 }
             }} 
             animal={(animals || []).find(a => a.id === selectedAnimalId)!} 
@@ -188,7 +187,6 @@ const DailyLog: React.FC<DailyLogProps> = ({ activeCategory, setActiveCategory, 
             feedMethods={feedMethods[activeCategory]}
             eventTypes={eventTypes}
             initialDate={viewDate}
-            onUpdateAnimal={updateAnimal}
             allAnimals={animals}
           />
       )}

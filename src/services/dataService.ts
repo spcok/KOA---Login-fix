@@ -28,6 +28,10 @@ export async function syncTable<T extends SyncableEntity>(
     const { data, error } = await query;
 
     if (error) {
+      if (error.code === '42501') {
+        console.warn(`[Sync Warning] RLS Access Denied for ${tableName}. Skipping sync.`);
+        return;
+      }
       console.error(`[Sync Error] Failed to fetch ${tableName} from Supabase:`, error);
       throw error;
     }
@@ -138,16 +142,18 @@ export async function syncAllTables(): Promise<void> {
     { name: 'users', table: db.users },
     { name: 'animals', table: db.animals },
     { name: 'log_entries', table: db.log_entries },
-    { name: 'documents', table: db.documents },
+    { name: 'global_documents', table: db.documents },
     { name: 'tasks', table: db.tasks },
     { name: 'site_log_entries', table: db.site_log_entries },
     { name: 'incidents', table: db.incidents },
     { name: 'first_aid_log_entries', table: db.first_aid_log_entries },
-    { name: 'organisation_profile', table: db.organisation_profile },
+    { name: 'organisation_profiles', table: db.organisation_profiles },
     { name: 'audit_log_entries', table: db.audit_log_entries },
     { name: 'daily_round_entries', table: db.daily_round_entries },
     { name: 'bcs_data', table: db.bcs_data },
     { name: 'animal_movements', table: db.animal_movements },
+    { name: 'contacts', table: db.contacts },
+    { name: 'holiday_requests', table: db.holiday_requests },
   ];
 
   const syncPromises = tablesToSync.map(({ name, table }) => syncTable(name, table as any));

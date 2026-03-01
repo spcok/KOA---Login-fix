@@ -21,8 +21,9 @@ export const useAppDataValues = () => {
   const daily_round_entries = useLiveQuery(() => db.daily_round_entries.toArray(), []) || [];
   const bcs_data = useLiveQuery(() => db.bcs_data.toArray(), []) || [];
   const animal_movements = useLiveQuery(() => db.animal_movements.toArray(), []) || [];
+  const staff_training = useLiveQuery(() => db.staff_training.toArray(), []) || [];
   const orgProfile = useLiveQuery(async () => {
-    const profiles = await db.organisation_profile.toArray();
+    const profiles = await db.organisation_profiles.toArray();
     return profiles[0];
   }, []) || undefined;
   const contacts = useLiveQuery(() => db.contacts.toArray(), []) || [];
@@ -60,6 +61,30 @@ export const useAppDataValues = () => {
 
   const deleteAnimal = async (id: string) => {
     await deleteRecord('animals', db.animals, id);
+  };
+
+  const archiveAnimal = async (id: string, reason: string, type: 'Disposition' | 'Death') => {
+    if (!currentUser) throw new Error('User not authenticated');
+    
+    // 1. Update animal record
+    await updateRecord('animals', db.animals, id, { 
+      archived: true, 
+      updated_at: new Date(), 
+      last_modified_by: currentUser.id 
+    });
+
+    // 2. Create a formal log entry for the archive event
+    const logEntry: Omit<LogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'> = {
+      animal_id: id,
+      log_date: new Date(),
+      log_type: type === 'Death' ? LogType.HEALTH : LogType.MOVEMENT,
+      value: `${type}: ${reason}`,
+      notes: `Subject archived from active registry. Reason: ${reason}`,
+      user_initials: currentUser.initials,
+      ...(type === 'Death' ? { health_record_type: 'Death' as any } : { movement_type: 'Disposition' as any })
+    };
+
+    await addLogEntry(id, logEntry);
   };
 
   const addLogEntry = async (animalId: string, entry: Omit<LogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {
@@ -173,7 +198,8 @@ export const useAppDataValues = () => {
 
   const updateOrgProfile = async (updates: Partial<OrganisationProfile>) => {
     if (!currentUser) throw new Error('User not authenticated');
-    await updateRecord('organisation_profile', db.organisation_profile, updates.id?.toString() || '1', { ...updates, updated_at: new Date(), last_modified_by: currentUser.id });
+    const id = updates.id?.toString() || orgProfile?.id || '00000000-0000-0000-0000-000000000001';
+    await updateRecord('organisation_profiles', db.organisation_profiles, id, { ...updates, id, updated_at: new Date(), last_modified_by: currentUser.id });
   };
 
   const addContact = async (contact: Omit<Contact, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {
@@ -230,11 +256,85 @@ export const useAppDataValues = () => {
       created_by: currentUser.id,
       last_modified_by: currentUser.id,
     };
-    await createRecord('documents', db.documents, newDoc);
+    await createRecord('global_documents', db.documents, newDoc);
   };
 
   const deleteDocument = async (id: string) => {
-    await deleteRecord('documents', db.documents, id);
+    await deleteRecord('global_documents', db.documents, id);
+  };
+
+  const addFirstAidLog = async (entry: Omit<FirstAidLogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {
+    if (!currentUser) throw new Error('User not authenticated');
+    const newEntry: FirstAidLogEntry = {
+      ...entry,
+      id: uuidv4(),
+      created_at: new Date(),
+      updated_at: new Date(),
+      created_by: currentUser.id,
+      last_modified_by: currentUser.id,
+    };
+    await createRecord('first_aid_log_entries', db.first_aid_log_entries, newEntry);
+  };
+
+  const addDailyRound = async (entry: Omit<DailyRoundEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {
+    if (!currentUser) throw new Error('User not authenticated');
+    const newEntry: DailyRoundEntry = {
+      ...entry,
+      id: uuidv4(),
+      created_at: new Date(),
+      updated_at: new Date(),
+      created_by: currentUser.id,
+      last_modified_by: currentUser.id,
+    };
+    await createRecord('daily_round_entries', db.daily_round_entries, newEntry);
+  };
+
+  const addBCSData = async (data: Omit<BCSData, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {
+    if (!currentUser) throw new Error('User not authenticated');
+    const newData: BCSData = {
+      ...data,
+      id: uuidv4(),
+      created_at: new Date(),
+      updated_at: new Date(),
+      created_by: currentUser.id,
+      last_modified_by: currentUser.id,
+    };
+    await createRecord('bcs_data', db.bcs_data, newData);
+  };
+
+  const addAnimalMovement = async (movement: Omit<AnimalMovement, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {
+    if (!currentUser) throw new Error('User not authenticated');
+    const newMovement: AnimalMovement = {
+      ...movement,
+      id: uuidv4(),
+      created_at: new Date(),
+      updated_at: new Date(),
+      created_by: currentUser.id,
+      last_modified_by: currentUser.id,
+    };
+    await createRecord('animal_movements', db.animal_movements, newMovement);
+  };
+
+  const addStaffTraining = async (training: Omit<StaffTraining, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => {
+    if (!currentUser) throw new Error('User not authenticated');
+    const newTraining: StaffTraining = {
+      ...training,
+      id: uuidv4(),
+      created_at: new Date(),
+      updated_at: new Date(),
+      created_by: currentUser.id,
+      last_modified_by: currentUser.id,
+    };
+    await createRecord('staff_training', db.staff_training, newTraining);
+  };
+
+  const updateStaffTraining = async (updates: Partial<StaffTraining>) => {
+    if (!currentUser) throw new Error('User not authenticated');
+    await updateRecord('staff_training', db.staff_training, updates.id!, { ...updates, updated_at: new Date(), last_modified_by: currentUser.id });
+  };
+
+  const deleteStaffTraining = async (id: string) => {
+    await deleteRecord('staff_training', db.staff_training, id);
   };
 
   return {
@@ -250,6 +350,7 @@ export const useAppDataValues = () => {
     daily_round_entries,
     bcs_data,
     animal_movements,
+    staff_training,
     orgProfile,
     contacts,
     holidayRequests,
@@ -262,6 +363,7 @@ export const useAppDataValues = () => {
     addAnimal,
     updateAnimal,
     deleteAnimal,
+    archiveAnimal,
     addLogEntry,
     updateLogEntry,
     deleteLogEntry,
@@ -283,6 +385,13 @@ export const useAppDataValues = () => {
     deleteHolidayRequest,
     addDocument,
     deleteDocument,
+    addFirstAidLog,
+    addDailyRound,
+    addBCSData,
+    addAnimalMovement,
+    addStaffTraining,
+    updateStaffTraining,
+    deleteStaffTraining,
   };
 };
 
@@ -300,6 +409,7 @@ export interface AppContextType {
   daily_round_entries: DailyRoundEntry[];
   bcs_data: BCSData[];
   animal_movements: AnimalMovement[];
+  staff_training: StaffTraining[];
   orgProfile: OrganisationProfile | undefined;
   contacts: Contact[];
   holidayRequests: HolidayRequest[];
@@ -313,6 +423,7 @@ export interface AppContextType {
   addAnimal: (animal: Omit<Animal, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by' | 'logs' | 'documents'>) => Promise<void>;
   updateAnimal: (updates: Partial<Animal>) => Promise<void>;
   deleteAnimal: (id: string) => Promise<void>;
+  archiveAnimal: (id: string, reason: string, type: 'Disposition' | 'Death') => Promise<void>;
   addLogEntry: (animalId: string, entry: Omit<LogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => Promise<void>;
   updateLogEntry: (updates: Partial<LogEntry>) => Promise<void>;
   deleteLogEntry: (id: string) => Promise<void>;
@@ -334,6 +445,13 @@ export interface AppContextType {
   deleteHolidayRequest: (id: string) => Promise<void>;
   addDocument: (doc: Omit<GlobalDocument, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => Promise<void>;
   deleteDocument: (id: string) => Promise<void>;
+  addFirstAidLog: (entry: Omit<FirstAidLogEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => Promise<void>;
+  addDailyRound: (entry: Omit<DailyRoundEntry, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => Promise<void>;
+  addBCSData: (data: Omit<BCSData, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => Promise<void>;
+  addAnimalMovement: (movement: Omit<AnimalMovement, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => Promise<void>;
+  addStaffTraining: (training: Omit<StaffTraining, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'last_modified_by'>) => Promise<void>;
+  updateStaffTraining: (updates: Partial<StaffTraining>) => Promise<void>;
+  deleteStaffTraining: (id: string) => Promise<void>;
 }
 
 // Create the context

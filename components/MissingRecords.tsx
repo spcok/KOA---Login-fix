@@ -31,7 +31,7 @@ const MissingRecords: React.FC = () => {
           let missingCount = 0;
           let weightCount = 0;
           let feedCount = 0;
-          const logs = log_entries.filter(l => l.animal_id === animal.id) || [];
+          const logs = (log_entries || []).filter(l => l.animal_id === animal.id);
           
           const timeline = dates.map(date => {
               const hasWeight = logs.some(l => l.type === LogType.WEIGHT && l.date.startsWith(date));

@@ -11,7 +11,8 @@ import {
   RefreshCw, ChevronRight, Activity, ShieldCheck, AlertCircle, Globe, Edit2, 
   ServerCrash, Wrench, Search, Filter, Calendar, FileImage, Ticket, Loader2, HardDrive, Play, ShieldAlert,
   RotateCcw, History as HistoryIcon, PenTool, Check, Camera, ArrowRight, Save,
-  BrainCircuit, Globe2, Dna, FileWarning, Gavel, Bug, XCircle, Terminal, UserCheck, Sparkles, Mail, ExternalLink
+  BrainCircuit, Globe2, Dna, FileWarning, Gavel, Bug, XCircle, Terminal, UserCheck, Sparkles, Mail, ExternalLink,
+  GraduationCap, Clock
 } from 'lucide-react';
 import { backupService } from '@/src/services/backupService';
 import { dataService } from '@/src/services/dataService';
@@ -167,16 +168,29 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
     feedMethods, updateFeedMethods, eventTypes, updateEventTypes,
     users, updateUsers, addUser, deleteUser,
     locations, updateLocations, contacts, updateContacts,
-    orgProfile, updateOrgProfile, tasks
+    orgProfile, updateOrgProfile, tasks, log_entries,
+    staff_training, addStaffTraining, updateStaffTraining, deleteStaffTraining
   } = useAppData();
 
-  const [activeTab, setActiveTab] = useState<'org' | 'users' | 'directory' | 'lists' | 'documents' | 'diagnostics' | 'intelligence' | 'system'>('org');
+  const [activeTab, setActiveTab] = useState<'org' | 'users' | 'training' | 'directory' | 'lists' | 'documents' | 'diagnostics' | 'intelligence' | 'system'>('org');
   const [isPending, startTransition] = useTransition();
   const [listSection, setListSection] = useState<AnimalCategory>(AnimalCategory.OWLS);
   
   const [orgForm, setOrgForm] = useState<OrganisationProfile>({
-      id: '', name: '', address: '', licenceNumber: '', contactEmail: '', contactPhone: '', logoUrl: '', websiteUrl: '', adoptionUrl: ''
-  });
+      id: '', 
+      name: '', 
+      address: '', 
+      licence_number: '', 
+      licence_expiry_date: undefined,
+      local_authority: '',
+      last_inspection_date: undefined,
+      next_inspection_date: undefined,
+      contact_email: '', 
+      contact_phone: '', 
+      logo_url: '', 
+      website_url: '', 
+      adoption_url: ''
+  } as OrganisationProfile);
 
   // User Management State
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
@@ -191,6 +205,18 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
   // Contact Management State
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [contactForm, setContactForm] = useState<Contact>({ id: '', name: '', role: '', phone: '', email: '' });
+
+  // Staff Training State
+  const [isTrainingModalOpen, setIsTrainingModalOpen] = useState(false);
+  const [editingTraining, setEditingTraining] = useState<any>(null);
+  const [trainingForm, setTrainingForm] = useState<any>({
+    user_id: '',
+    training_name: '',
+    completion_date: new Date().toISOString().split('T')[0],
+    expiry_date: '',
+    status: 'Completed',
+    notes: ''
+  });
 
   // Diagnostics State
   const [diagnosticIssues, setDiagnosticIssues] = useState<DiagnosticIssue[]>([]);
@@ -216,11 +242,11 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
 
   const storageStats = useMemo(() => {
       const totalAnimals = animals.length;
-      const totalLogs = animals.reduce((acc, a) => acc + (a.logs?.length || 0), 0);
-      const dbSizeEst = JSON.stringify(animals).length + JSON.stringify(tasks).length + JSON.stringify(users).length;
+      const totalLogs = (log_entries || []).length;
+      const dbSizeEst = JSON.stringify(animals).length + JSON.stringify(tasks).length + JSON.stringify(users).length + JSON.stringify(log_entries || []).length;
       const dbSizeMB = (dbSizeEst / (1024 * 1024)).toFixed(2);
       return { totalAnimals, totalLogs, dbSizeMB };
-  }, [animals, tasks, users]);
+  }, [animals, tasks, users, log_entries]);
 
   useEffect(() => {
       if (orgProfile) {
@@ -228,13 +254,17 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
               id: orgProfile.id || '',
               name: orgProfile.name || '',
               address: orgProfile.address || '',
-              licenceNumber: orgProfile.licenceNumber || '',
-              contactEmail: orgProfile.contactEmail || '',
-              contactPhone: orgProfile.contactPhone || '',
-              logoUrl: orgProfile.logoUrl || '',
-              websiteUrl: orgProfile.websiteUrl || '',
-              adoptionUrl: orgProfile.adoptionUrl || ''
-          });
+              licence_number: orgProfile.licence_number || '',
+              licence_expiry_date: orgProfile.licence_expiry_date,
+              local_authority: orgProfile.local_authority || '',
+              last_inspection_date: orgProfile.last_inspection_date,
+              next_inspection_date: orgProfile.next_inspection_date,
+              contact_email: orgProfile.contact_email || '',
+              contact_phone: orgProfile.contact_phone || '',
+              logo_url: orgProfile.logo_url || '',
+              website_url: orgProfile.website_url || '',
+              adoption_url: orgProfile.adoption_url || ''
+          } as OrganisationProfile);
       }
   }, [orgProfile]);
 
@@ -252,11 +282,11 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
           const animal = (animals || []).find(a => a.id === remediationIssue.subjectId);
           if (animal) {
               if (remediationIssue.id.includes('comp_tax')) {
-                  setFixForm({ latinName: animal.latinName || '', species: animal.species });
+                  setFixForm({ latin_name: animal.latin_name || '', species: animal.species });
               } else if (remediationIssue.id.includes('comp_id')) {
-                  setFixForm({ ringNumber: animal.ringNumber || '', microchip: animal.microchip || '', hasNoId: animal.hasNoId || false });
+                  setFixForm({ ring_number: animal.ring_number || '', microchip_id: animal.microchip_id || '', has_no_id: animal.has_no_id || false });
               } else if (remediationIssue.id.includes('comp_orig')) {
-                  setFixForm({ arrivalDate: animal.arrivalDate || '', origin: animal.origin || '' });
+                  setFixForm({ acquisition_date: animal.acquisition_date || '', origin: animal.origin || '' });
               }
           }
       } else if (remediationIssue && remediationIssue.id === 'sec_no_admin') {
@@ -277,11 +307,11 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
       
       startFixTransition(async () => {
           if (remediationIssue.id.includes('comp_tax') && animal) {
-              await updateAnimal({ ...animal, latinName: fixForm.latinName });
+              await updateAnimal({ ...animal, latin_name: fixForm.latin_name });
           } else if (remediationIssue.id.includes('comp_id') && animal) {
-              await updateAnimal({ ...animal, ringNumber: fixForm.ringNumber, microchip: fixForm.microchip, hasNoId: fixForm.hasNoId });
+              await updateAnimal({ ...animal, ring_number: fixForm.ring_number, microchip_id: fixForm.microchip_id, has_no_id: fixForm.has_no_id });
           } else if (remediationIssue.id.includes('comp_orig') && animal) {
-              await updateAnimal({ ...animal, arrivalDate: fixForm.arrivalDate, origin: fixForm.origin });
+              await updateAnimal({ ...animal, acquisition_date: fixForm.acquisition_date, origin: fixForm.origin });
           } else if (remediationIssue.id === 'sec_no_admin' && fixForm.newAdminId) {
               const targetUser = (users || []).find(u => u.id === fixForm.newAdminId);
               if (targetUser) {
@@ -297,7 +327,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
   const handleAiLatinName = async () => {
       if (!fixForm.species) return;
       const latin = await getLatinName(fixForm.species);
-      if (latin) setFixForm(prev => ({ ...prev, latinName: latin }));
+      if (latin) setFixForm(prev => ({ ...prev, latin_name: latin }));
   };
 
   // --- CONTACTS HANDLERS ---
@@ -309,6 +339,31 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
           : [...contacts, newContact];
       updateContacts(newContacts);
       setIsContactModalOpen(false);
+  };
+
+  // --- TRAINING HANDLERS ---
+  const handleSaveTraining = async () => {
+      if (!trainingForm.user_id || !trainingForm.training_name) return;
+      
+      const data = {
+          ...trainingForm,
+          completion_date: new Date(trainingForm.completion_date),
+          expiry_date: trainingForm.expiry_date ? new Date(trainingForm.expiry_date) : undefined
+      };
+
+      if (editingTraining) {
+          await updateStaffTraining({ ...data, id: editingTraining.id });
+      } else {
+          await addStaffTraining(data);
+      }
+      setIsTrainingModalOpen(false);
+      setEditingTraining(null);
+  };
+
+  const handleDeleteTraining = async (id: string) => {
+      if (window.confirm('Delete this training record?')) {
+          await deleteStaffTraining(id);
+      }
   };
 
   const handleDeleteContact = (id: string) => {
@@ -326,10 +381,10 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
           role: userForm.role || UserRole.VOLUNTEER,
           pin: userForm.pin || '0000',
           active: userForm.active !== undefined ? userForm.active : true,
-          jobPosition: userForm.jobPosition,
-          permissions: userForm.permissions,
-          signature: userForm.signature
-      };
+          job_position: userForm.job_position,
+          permissions: userForm.permissions!,
+          signature_image_url: userForm.signature_image_url
+      } as User;
       const updatedUsers = userForm.id 
           ? users.map(u => u.id === newUser.id ? newUser : u)
           : [...users, newUser];
@@ -356,18 +411,18 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
       if(file) {
           const reader = new FileReader();
           reader.onload = (evt) => {
-              setDocForm(prev => ({...prev, url: evt.target?.result as string, name: file.name}));
+              setDocForm(prev => ({...prev, file_url: evt.target?.result as string, name: file.name}));
           };
           reader.readAsDataURL(file);
       }
   };
 
   const handleSaveDocument = async () => {
-      if(!docForm.name || !docForm.url) return;
+      if(!docForm.name || !docForm.file_url) return;
       const newDoc = { 
           ...docForm, 
           id: docForm.id || `doc_${Date.now()}`,
-          uploadDate: new Date().toISOString()
+          upload_date: new Date()
       } as GlobalDocument;
       
       
@@ -497,8 +552,8 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                   if (data && (data.latin || data.status)) {
                       updates.push({
                           ...animal,
-                          latinName: data.latin || animal.latinName,
-                          redListStatus: data.status || animal.redListStatus
+                          latin_name: data.latin || animal.latin_name,
+                          red_list_status: data.status || animal.red_list_status
                       });
                   }
               });
@@ -526,7 +581,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
       if (file) {
           try {
               const resized = await resizeImage(file);
-              setOrgForm(prev => ({ ...prev, logoUrl: resized }));
+              setOrgForm(prev => ({ ...prev, logo_url: resized }));
           } catch (err) { console.error(err); }
       }
   };
@@ -688,6 +743,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                 {[
                     { id: 'org', label: 'Organisation', icon: Building2 },
                     { id: 'users', label: 'Access Control', icon: Users },
+                    { id: 'training', label: 'Staff Training', icon: GraduationCap },
                     { id: 'directory', label: 'Directory', icon: Phone },
                     { id: 'lists', label: 'Operational Lists', icon: Utensils },
                     { id: 'documents', label: 'Statutory Files', icon: FileText },
@@ -728,7 +784,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                     <div className="bg-white p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-8">
                         <div className="flex items-center gap-8">
                             <div className="w-32 h-32 bg-slate-50 rounded-2xl border-4 border-dashed border-slate-200 flex items-center justify-center relative group overflow-hidden shadow-inner">
-                                {orgForm.logoUrl ? <img src={orgForm.logoUrl} className="w-full h-full object-contain p-2" /> : <Upload size={32} className="text-slate-300" />}
+                                {orgForm.logo_url ? <img src={orgForm.logo_url} className="w-full h-full object-contain p-2" /> : <Upload size={32} className="text-slate-300" />}
                                 <label className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer">
                                     <Camera size={20} className="text-white mb-1"/>
                                     <span className="text-[8px] font-black text-white uppercase">Replace</span>
@@ -737,15 +793,21 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                             </div>
                             <div className="flex-1 space-y-4">
                                 <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Academy Name</label><input type="text" value={orgForm.name} onChange={e => setOrgForm({...orgForm, name: e.target.value})} className={inputClass}/></div>
-                                <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Zoo Licence Number</label><input type="text" value={orgForm.licenceNumber} onChange={e => setOrgForm({...orgForm, licenceNumber: e.target.value})} className={inputClass}/></div>
+                                <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Zoo Licence Number</label><input type="text" value={orgForm.licence_number} onChange={e => setOrgForm({...orgForm, licence_number: e.target.value})} className={inputClass}/></div>
+                                <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Licence Expiry</label><input type="date" value={orgForm.licence_expiry_date ? new Date(orgForm.licence_expiry_date).toISOString().split('T')[0] : ''} onChange={e => setOrgForm({...orgForm, licence_expiry_date: e.target.value ? new Date(e.target.value) : undefined})} className={inputClass}/></div>
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-6">
+                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Local Authority</label><input type="text" value={orgForm.local_authority} onChange={e => setOrgForm({...orgForm, local_authority: e.target.value})} className={inputClass}/></div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Last Inspection</label><input type="date" value={orgForm.last_inspection_date ? new Date(orgForm.last_inspection_date).toISOString().split('T')[0] : ''} onChange={e => setOrgForm({...orgForm, last_inspection_date: e.target.value ? new Date(e.target.value) : undefined})} className={inputClass}/></div>
+                                <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Next Inspection</label><input type="date" value={orgForm.next_inspection_date ? new Date(orgForm.next_inspection_date).toISOString().split('T')[0] : ''} onChange={e => setOrgForm({...orgForm, next_inspection_date: e.target.value ? new Date(e.target.value) : undefined})} className={inputClass}/></div>
+                            </div>
                             <div className="col-span-2"><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Headquarters Address</label><textarea value={orgForm.address} onChange={e => setOrgForm({...orgForm, address: e.target.value})} className={`${inputClass} h-20 resize-none font-medium normal-case`}/></div>
-                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Professional Email</label><input type="email" value={orgForm.contactEmail} onChange={e => setOrgForm({...orgForm, contactEmail: e.target.value})} className={`${inputClass} normal-case`}/></div>
-                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Academy Phone</label><input type="text" value={orgForm.contactPhone} onChange={e => setOrgForm({...orgForm, contactPhone: e.target.value})} className={inputClass}/></div>
-                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Official Website</label><input type="url" value={orgForm.websiteUrl} onChange={e => setOrgForm({...orgForm, websiteUrl: e.target.value})} className={`${inputClass} normal-case`}/></div>
-                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Adoption Portal</label><input type="url" value={orgForm.adoptionUrl} onChange={e => setOrgForm({...orgForm, adoptionUrl: e.target.value})} className={`${inputClass} normal-case`}/></div>
+                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Professional Email</label><input type="email" value={orgForm.contact_email} onChange={e => setOrgForm({...orgForm, contact_email: e.target.value})} className={`${inputClass} normal-case`}/></div>
+                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Academy Phone</label><input type="text" value={orgForm.contact_phone} onChange={e => setOrgForm({...orgForm, contact_phone: e.target.value})} className={inputClass}/></div>
+                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Official Website</label><input type="url" value={orgForm.website_url} onChange={e => setOrgForm({...orgForm, website_url: e.target.value})} className={`${inputClass} normal-case`}/></div>
+                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Adoption Portal</label><input type="url" value={orgForm.adoption_url} onChange={e => setOrgForm({...orgForm, adoption_url: e.target.value})} className={`${inputClass} normal-case`}/></div>
                         </div>
                         <div className="pt-6 border-t border-slate-100 flex justify-end">
                             <button onClick={handleOrgSave} className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all shadow-xl active:scale-95 flex items-center gap-2"><Check size={18}/> Save Institution Profile</button>
@@ -764,7 +826,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {users.map(user => (
+                        {(users || []).map(user => (
                             <div key={user.id} onClick={() => { setEditingUser(user); setUserForm(user); setIsUserModalOpen(true); }} className="bg-white p-6 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:shadow-xl transition-all cursor-pointer group">
                                 <div className="flex items-center gap-4 mb-4">
                                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md ${user.role === 'Admin' ? 'bg-slate-900' : 'bg-emerald-600'}`}>
@@ -772,18 +834,110 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="font-black text-slate-900 text-sm uppercase tracking-tight truncate">{user.name}</p>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{user.jobPosition || user.role}</p>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{user.job_position || user.role}</p>
                                     </div>
                                     {user.active ? <ShieldCheck size={18} className="text-emerald-500"/> : <X size={18} className="text-rose-400"/>}
                                 </div>
                                 <div className="flex justify-between items-center pt-4 border-t border-slate-100">
                                     <div className="flex items-center gap-2 text-[10px] font-black text-slate-300 uppercase tracking-widest">
-                                        <PenTool size={12}/> {user.signature ? 'Signed' : 'No Sig'}
+                                        <PenTool size={12}/> {user.signature_image_url ? 'Signed' : 'No Sig'}
                                     </div>
                                     <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">Manage Profile <ChevronRight size={10}/></span>
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </div>
+            )}
+
+            {/* STAFF TRAINING TAB */}
+            {activeTab === 'training' && (
+                <div className="max-w-6xl space-y-8 animate-in slide-in-from-right-4 duration-300 pb-24">
+                    <div className="flex justify-between items-center border-b-2 border-slate-200 pb-2">
+                        <div>
+                            <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
+                                <GraduationCap size={20} className="text-emerald-600"/> Staff Training Registry
+                            </h3>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Professional Development & Statutory Certifications</p>
+                        </div>
+                        <button onClick={() => { 
+                            setEditingTraining(null); 
+                            setTrainingForm({
+                                user_id: '',
+                                training_name: '',
+                                completion_date: new Date().toISOString().split('T')[0],
+                                expiry_date: '',
+                                status: 'Completed',
+                                notes: ''
+                            }); 
+                            setIsTrainingModalOpen(true); 
+                        }} className="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all shadow-md">
+                            <Plus size={14}/> Log Training Record
+                        </button>
+                    </div>
+
+                    <div className="bg-white rounded-2xl border-2 border-slate-200 shadow-sm overflow-hidden">
+                        <table className="w-full text-left">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Staff Member</th>
+                                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Name</th>
+                                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Date</th>
+                                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Expiry</th>
+                                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</th>
+                                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {staff_training.map(training => {
+                                    const user = users.find(u => u.id === training.user_id);
+                                    const isExpired = training.expiry_date && new Date(training.expiry_date) < new Date();
+                                    
+                                    return (
+                                        <tr key={training.id} className="hover:bg-slate-50 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-600">
+                                                        {user?.initials || '??'}
+                                                    </div>
+                                                    <span className="text-sm font-bold text-slate-900">{user?.name || 'Unknown Staff'}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm font-medium text-slate-700">{training.training_name}</td>
+                                            <td className="px-6 py-4 text-xs font-medium text-slate-500">
+                                                {new Date(training.completion_date).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4 text-xs font-medium text-slate-500">
+                                                {training.expiry_date ? new Date(training.expiry_date).toLocaleDateString() : 'N/A'}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={`text-[9px] font-black px-2 py-1 rounded uppercase tracking-widest ${
+                                                    isExpired ? 'bg-rose-100 text-rose-600' : 
+                                                    training.status === 'Completed' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'
+                                                }`}>
+                                                    {isExpired ? 'Expired' : training.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-right flex justify-end gap-2">
+                                                <button onClick={() => {
+                                                    setEditingTraining(training);
+                                                    setTrainingForm({
+                                                        ...training,
+                                                        completion_date: new Date(training.completion_date).toISOString().split('T')[0],
+                                                        expiry_date: training.expiry_date ? new Date(training.expiry_date).toISOString().split('T')[0] : ''
+                                                    });
+                                                    setIsTrainingModalOpen(true);
+                                                }} className="p-2 text-slate-400 hover:text-emerald-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-colors"><Edit2 size={14}/></button>
+                                                <button onClick={() => handleDeleteTraining(training.id)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-colors"><Trash2 size={14}/></button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                                {staff_training.length === 0 && (
+                                    <tr><td colSpan={6} className="px-6 py-12 text-center text-xs font-black text-slate-300 uppercase tracking-widest">No Training Records Found</td></tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             )}
@@ -874,10 +1028,10 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                                             <span className="text-[10px] font-black bg-slate-100 px-2 py-1 rounded text-slate-600 uppercase tracking-widest">{doc.category}</span>
                                         </td>
                                         <td className="px-6 py-4 text-xs font-medium text-slate-500">
-                                            {new Date(doc.uploadDate).toLocaleDateString()}
+                                            {new Date(doc.upload_date).toLocaleDateString()}
                                         </td>
                                         <td className="px-6 py-4 text-right flex justify-end gap-2">
-                                            <a href={doc.url} download={doc.name} className="p-2 text-slate-400 hover:text-emerald-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-colors"><Download size={14}/></a>
+                                            <a href={doc.file_url} download={doc.name} className="p-2 text-slate-400 hover:text-emerald-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-colors"><Download size={14}/></a>
                                             <button onClick={() => handleDeleteDocument(doc.id)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-colors"><Trash2 size={14}/></button>
                                         </td>
                                     </tr>
@@ -1099,7 +1253,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                                 <div key={animalId} className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm animate-in slide-in-from-bottom-2">
                                     <div className="flex items-center gap-4 mb-4 border-b border-slate-100 pb-3">
                                         <div className="w-10 h-10 rounded-xl bg-slate-100 overflow-hidden">
-                                            <img src={animal.imageUrl} alt="" className="w-full h-full object-cover"/>
+                                            <img src={animal.image_url} alt="" className="w-full h-full object-cover"/>
                                         </div>
                                         <div>
                                             <h4 className="font-black text-slate-900 text-sm uppercase">{animal.name}</h4>
@@ -1312,6 +1466,8 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                         <div className="grid grid-cols-2 gap-6">
                             <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Full Legal Name</label>
                             <input type="text" value={userForm.name || ''} onChange={e => setUserForm({...userForm, name: e.target.value})} className={`${inputClass} normal-case font-semibold`} /></div>
+                            <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Job Position</label>
+                            <input type="text" value={userForm.job_position || ''} onChange={e => setUserForm({...userForm, job_position: e.target.value})} className={`${inputClass} normal-case font-semibold`} /></div>
                             <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Initials (3 Max)</label>
                             <input type="text" maxLength={3} value={userForm.initials || ''} onChange={e => setUserForm({...userForm, initials: e.target.value.toUpperCase()})} className={inputClass}/></div>
                         </div>
@@ -1319,7 +1475,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                             <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Security PIN</label>
                             <input type="password" maxLength={4} value={userForm.pin || ''} onChange={e => setUserForm({...userForm, pin: e.target.value})} className={inputClass}/></div>
                             <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Academy Role</label>
-                            <select value={userForm.role || UserRole.VOLUNTEER} onChange={e => setUserForm({...userForm, role: e.target.value as UserRole})} className={inputClass}><option value={UserRole.VOLUNTEER}>Volunteer</option><option value={UserRole.ADMIN}>Admin</option></select></div>
+                            <select value={userForm.role || UserRole.VOLUNTEER} onChange={e => setUserForm({...userForm, role: e.target.value as UserRole})} className={inputClass}><option value={UserRole.VOLUNTEER}>Volunteer</option><option value={UserRole.STAFF}>Staff</option><option value={UserRole.KEEPER}>Keeper</option><option value={UserRole.SENIOR_KEEPER}>Senior Keeper</option><option value={UserRole.ADMIN}>Admin</option><option value={UserRole.VETERINARIAN}>Veterinarian</option><option value={UserRole.DIRECTOR}>Director</option></select></div>
                         </div>
 
                         {/* Access Control Section */}
@@ -1409,26 +1565,22 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
 
                         <div className="space-y-4">
                             <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Authorised Digital Signature</label>
-                            <SignaturePad value={userForm.signature || ''} onChange={(v) => setUserForm({...userForm, signature: v})}/>
+                            <SignaturePad value={userForm.signature_image_url || ''} onChange={(v) => setUserForm({...userForm, signature_image_url: v})}/>
                         </div>
                         <div className="pt-4">
                             <button onClick={handleSaveUser} className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:bg-black transition-all shadow-xl active:scale-95">Commit to Personnel Ledger</button>
-<button onClick={async () => {
-    if (!supabase) return;
-    try {
-        const { options } = await supabase.auth.generateAuthenticationOptions();
-        await supabase.auth.signInWithWebAuthn(options);
-        alert('Device enrolled for biometric login!');
-    } catch (error) {
-        console.error('WebAuthn enrollment error:', error);
-        alert('Failed to enroll device. See console for details.');
-    }
-}} className="w-full mt-4 bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Enroll Device for Biometric Login</button>
                             <button onClick={async () => {
                                 if (!supabase) return;
-                                const { data, error } = await supabase.auth.signInWithWebAuthn();
-                                if (error) console.error('Error enrolling device', error);
-                                else console.log('Device enrolled', data);
+                                try {
+                                    // @ts-ignore - WebAuthn might not be in all types yet
+                                    const { options } = await supabase.auth.generateAuthenticationOptions();
+                                    // @ts-ignore
+                                    await supabase.auth.signInWithWebAuthn(options);
+                                    alert('Device enrolled for biometric login!');
+                                } catch (error) {
+                                    console.error('WebAuthn enrollment error:', error);
+                                    alert('Failed to enroll device. See console for details.');
+                                }
                             }} className="w-full mt-4 bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Enroll Device for Biometric Login</button>
                         </div>
                     </div>
@@ -1508,7 +1660,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                                 <div>
                                     <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Scientific Latin Name</label>
                                     <div className="flex gap-2">
-                                        <input type="text" value={fixForm.latinName || ''} onChange={e => setFixForm({...fixForm, latinName: e.target.value})} className={`${inputClass} italic font-serif`} placeholder="e.g. Tyto alba"/>
+                                        <input type="text" value={fixForm.latin_name || ''} onChange={e => setFixForm({...fixForm, latin_name: e.target.value})} className={`${inputClass} italic font-serif`} placeholder="e.g. Tyto alba"/>
                                         <button type="button" onClick={handleAiLatinName} className="bg-slate-900 text-white px-4 rounded-xl flex items-center gap-2 hover:bg-black transition-all shadow-md"><Sparkles size={16}/></button>
                                     </div>
                                 </div>
@@ -1519,11 +1671,11 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                         {remediationIssue.id.includes('comp_id') && (
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Ring Number</label><input type="text" value={fixForm.ringNumber || ''} onChange={e => setFixForm({...fixForm, ringNumber: e.target.value})} className={`${inputClass} font-mono`} placeholder="Optional"/></div>
-                                    <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Microchip</label><input type="text" value={fixForm.microchip || ''} onChange={e => setFixForm({...fixForm, microchip: e.target.value})} className={`${inputClass} font-mono`} placeholder="Optional"/></div>
+                                    <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Ring Number</label><input type="text" value={fixForm.ring_number || ''} onChange={e => setFixForm({...fixForm, ring_number: e.target.value})} className={`${inputClass} font-mono`} placeholder="Optional"/></div>
+                                    <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Microchip</label><input type="text" value={fixForm.microchip_id || ''} onChange={e => setFixForm({...fixForm, microchip_id: e.target.value})} className={`${inputClass} font-mono`} placeholder="Optional"/></div>
                                 </div>
                                 <label className="flex items-center gap-3 p-3 border-2 border-slate-100 rounded-xl bg-slate-50 cursor-pointer hover:border-slate-200">
-                                    <input type="checkbox" checked={fixForm.hasNoId || false} onChange={e => setFixForm({...fixForm, hasNoId: e.target.checked})} className="w-5 h-5 accent-emerald-600"/>
+                                    <input type="checkbox" checked={fixForm.has_no_id || false} onChange={e => setFixForm({...fixForm, has_no_id: e.target.checked})} className="w-5 h-5 accent-emerald-600"/>
                                     <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Confirm Subject Has No ID</span>
                                 </label>
                             </div>
@@ -1532,7 +1684,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                         {/* ORIGIN FORM */}
                         {remediationIssue.id.includes('comp_orig') && (
                             <div className="space-y-4">
-                                <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Arrival Date</label><input type="date" value={fixForm.arrivalDate || ''} onChange={e => setFixForm({...fixForm, arrivalDate: e.target.value})} className={inputClass}/></div>
+                                <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Arrival Date</label><input type="date" value={fixForm.acquisition_date || ''} onChange={e => setFixForm({...fixForm, acquisition_date: e.target.value})} className={inputClass}/></div>
                                 <div><label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Origin Source</label><input type="text" value={fixForm.origin || ''} onChange={e => setFixForm({...fixForm, origin: e.target.value})} className={inputClass} placeholder="e.g. Captive Bred - UK"/></div>
                             </div>
                         )}
@@ -1543,7 +1695,7 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Promote User to Admin</label>
                                 <select value={fixForm.newAdminId || ''} onChange={e => setFixForm({...fixForm, newAdminId: e.target.value})} className={inputClass}>
                                     <option value="">Select User...</option>
-                                    {users.filter(u => u.active).map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                                    {(users || []).filter(u => u.active).map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                                 </select>
                             </div>
                         )}
@@ -1555,6 +1707,89 @@ const Settings: React.FC<SettingsProps> = ({ onLaunchBenchmark }) => {
                         >
                             {isFixing ? <Loader2 size={18} className="animate-spin"/> : <CheckCircle2 size={18}/>}
                             Apply Correction
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+        {/* Training Modal */}
+        {isTrainingModalOpen && (
+            <div className="fixed inset-0 bg-slate-900/80 z-[100] flex items-center justify-center p-4">
+                <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-xl overflow-hidden animate-in zoom-in-95">
+                    <div className="p-8 border-b-2 border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <div>
+                            <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{editingTraining ? 'Update Training Record' : 'Log Training Record'}</h2>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Professional Development Registry</p>
+                        </div>
+                        <button onClick={() => setIsTrainingModalOpen(false)} className="text-slate-300 hover:text-slate-900"><X size={32}/></button>
+                    </div>
+                    <div className="p-8 space-y-6">
+                        <div className="grid grid-cols-1 gap-6">
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Staff Member</label>
+                                <select 
+                                    value={trainingForm.user_id} 
+                                    onChange={e => setTrainingForm({...trainingForm, user_id: e.target.value})} 
+                                    className={inputClass}
+                                >
+                                    <option value="">Select Staff Member...</option>
+                                    {(users || []).map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Training Name</label>
+                                <input 
+                                    type="text" 
+                                    value={trainingForm.training_name} 
+                                    onChange={e => setTrainingForm({...trainingForm, training_name: e.target.value})} 
+                                    className={inputClass} 
+                                    placeholder="e.g. First Aid, Fire Safety, Animal Handling"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Completion Date</label>
+                                    <input 
+                                        type="date" 
+                                        value={trainingForm.completion_date} 
+                                        onChange={e => setTrainingForm({...trainingForm, completion_date: e.target.value})} 
+                                        className={inputClass}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Expiry Date (Optional)</label>
+                                    <input 
+                                        type="date" 
+                                        value={trainingForm.expiry_date} 
+                                        onChange={e => setTrainingForm({...trainingForm, expiry_date: e.target.value})} 
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Status</label>
+                                <select 
+                                    value={trainingForm.status} 
+                                    onChange={e => setTrainingForm({...trainingForm, status: e.target.value})} 
+                                    className={inputClass}
+                                >
+                                    <option value="Completed">Completed</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Planned">Planned</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 text-slate-900">Notes</label>
+                                <textarea 
+                                    value={trainingForm.notes} 
+                                    onChange={e => setTrainingForm({...trainingForm, notes: e.target.value})} 
+                                    className={`${inputClass} h-24 resize-none font-medium normal-case`}
+                                    placeholder="Additional details..."
+                                />
+                            </div>
+                        </div>
+                        <button onClick={handleSaveTraining} className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:bg-black transition-all shadow-xl active:scale-95">
+                            {editingTraining ? 'Update Record' : 'Commit to Registry'}
                         </button>
                     </div>
                 </div>

@@ -67,7 +67,7 @@ const Reports: React.FC = () => {
 
       if (selectedSchemaId === 'DAILY_LOG') {
           rows = filteredAnimals.flatMap(animal => 
-              (animal.log_entries || []).filter(l => inDateRange(l.log_date)).map(l => ({
+              (log_entries || []).filter(l => l.animal_id === animal.id && inDateRange(l.log_date)).map(l => ({
                   subject: animal.name,
                   time: new Date(l.log_date).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}),
                   weight: l.log_type === LogType.WEIGHT ? (l.weight_in_grams ? formatWeightDisplay(l.weight_in_grams, animal.weight_unit) : l.value) : '-',
@@ -93,7 +93,7 @@ const Reports: React.FC = () => {
           rows = Array.from(censusMap.values());
       }
       else if (selectedSchemaId === 'STOCK_LIST') {
-          rows = filteredAnimals.filter(a => !a.is_archived).map(a => ({
+          rows = (filteredAnimals || []).filter(a => !a.is_archived).map(a => ({
               id: a.ring_number || a.microchip_id || '-',
               name: a.name,
               latin: a.latin_name || '-',
@@ -113,7 +113,7 @@ const Reports: React.FC = () => {
           }
           rows = dates.flatMap(d => {
               const dayLogs = siteLogs.filter(l => l.log_date.toISOString().split('T')[0] === d && l.title && l.title.includes('Round:'));
-              return filteredAnimals.filter(a => !a.is_archived).map(animal => {
+              return (filteredAnimals || []).filter(a => !a.is_archived).map(animal => {
                   const sectionLogs = dayLogs.filter(l => { try { return JSON.parse(l.description).section === animal.category; } catch { return false; } });
                   const amLog = sectionLogs.find(l => JSON.parse(l.description).type === 'Morning');
                   const pmLog = sectionLogs.find(l => JSON.parse(l.description).type === 'Evening');
@@ -134,7 +134,7 @@ const Reports: React.FC = () => {
           });
       }
       else if (selectedSchemaId === 'INCIDENTS') {
-          rows = incidents.filter(i => inDateRange(i.incident_date)).map(i => ({
+          rows = (incidents || []).filter(i => inDateRange(i.incident_date)).map(i => ({
               date: new Date(i.incident_date).toLocaleDateString('en-GB'),
               location: i.location,
               category: i.incident_type,
@@ -152,15 +152,24 @@ const Reports: React.FC = () => {
               date.setDate(end.getDate() - i);
               keys.push(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
           }
-          rows = filteredAnimals.map(a => {
+          rows = (filteredAnimals || []).map(a => {
               const row: any = { subject: a.name };
               keys.forEach(k => {
-                  const dayLogs = (a.log_entries || []).filter(l => l.log_type === LogType.WEIGHT && l.log_date.toISOString().startsWith(k));
+                  const dayLogs = (log_entries || []).filter(l => l.animal_id === a.id && l.log_type === LogType.WEIGHT && l.log_date.toISOString().startsWith(k));
                   dayLogs.sort((x, y) => new Date(y.log_date).getTime() - new Date(x.log_date).getTime());
                   row[k] = dayLogs.length > 0 ? (dayLogs[0].weight_in_grams ? formatWeightDisplay(dayLogs[0].weight_in_grams, a.weight_unit) : dayLogs[0].value) : '-';
               });
               return row;
           });
+      }
+      else if (selectedSchemaId === 'CONSERVATION_EDUCATION') {
+          rows = (log_entries || []).filter(l => (l.log_type === LogType.CONSERVATION || l.log_type === LogType.EDUCATION) && inDateRange(l.log_date)).map(l => ({
+              date: new Date(l.log_date).toLocaleDateString('en-GB'),
+              type: l.log_type,
+              title: l.value,
+              description: l.notes || '-',
+              initials: l.user_initials || '-'
+          }));
       }
 
       return rows;
@@ -186,6 +195,9 @@ const Reports: React.FC = () => {
                       break;
                   case 'INCIDENTS':
                       await DocumentService.generateIncidentReport(incidents.filter(i => inDateRange(i.incident_date)), orgProfile || null, dateRangeText, currentUser, reportTitle);
+                      break;
+                  case 'CONSERVATION_EDUCATION':
+                      await DocumentService.generateConservationEducationLog(tableData, orgProfile || null, dateRangeText, currentUser, reportTitle);
                       break;
                   default:
                       alert("Export for this report type is under construction.");

@@ -12,7 +12,6 @@ import {
 import ReactMarkdown from 'react-markdown';
 
 const WeatherView: React.FC = () => {
-  const { orgProfile } = useAppData();
   const [data, setData] = useState<FullWeatherData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<string>('');

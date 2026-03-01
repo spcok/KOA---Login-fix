@@ -66,10 +66,10 @@ async function withRetry<T>(fn: () => Promise<T>, retries = 3, delay = 2000): Pr
  * Fetches comprehensive species details for statutory registry
  */
 export const getSpeciesDetails = async (species: string): Promise<{
-    latinName?: string;
-    conservationStatus?: ConservationStatus;
-    hazardRating?: HazardRating;
-    isVenomous?: boolean;
+    latin_name?: string;
+    red_list_status?: ConservationStatus;
+    hazard_rating?: HazardRating;
+    is_venomous?: boolean;
   }> => {
     if (!species.trim()) return {};
     const ai = getAi();
@@ -79,10 +79,10 @@ export const getSpeciesDetails = async (species: string): Promise<{
         contents: `Analyze the animal species "${species}" for zoo statutory registry purposes.
         
         Provide the following data in JSON format:
-        - latinName: Scientific name (string)
-        - conservationStatus: IUCN Red List Code (e.g. LC, NT, VU, EN, CR, EW, EX, DD, NE)
-        - hazardRating: Risk level for handlers (Low, Medium, High). High = dangerous carnivores, venomous, or large raptors.
-        - isVenomous: boolean (true if venomous/poisonous)
+        - latin_name: Scientific name (string)
+        - red_list_status: IUCN Red List Code (e.g. LC, NT, VU, EN, CR, EW, EX, DD, NE)
+        - hazard_rating: Risk level for handlers (Low, Medium, High). High = dangerous carnivores, venomous, or large raptors.
+        - is_venomous: boolean (true if venomous/poisonous)
   
         Return ONLY valid JSON.`,
         config: {
@@ -94,10 +94,10 @@ export const getSpeciesDetails = async (species: string): Promise<{
       try {
           const data = JSON.parse(response.text || '{}');
           return {
-              latinName: data.latinName,
-              conservationStatus: data.conservationStatus ? normalizeIUCNStatus(data.conservationStatus) : undefined,
-              hazardRating: data.hazardRating ? normalizeHazardRating(data.hazardRating) : undefined,
-              isVenomous: data.isVenomous
+              latin_name: data.latin_name,
+              red_list_status: data.red_list_status ? normalizeIUCNStatus(data.red_list_status) : undefined,
+              hazard_rating: data.hazard_rating ? normalizeHazardRating(data.hazard_rating) : undefined,
+              is_venomous: data.is_venomous
           };
       } catch (e) {
           console.error("JSON Parse Error", e);

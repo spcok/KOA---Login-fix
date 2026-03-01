@@ -5,7 +5,7 @@ import {
   ArrowLeftRight, ShieldAlert, AlertTriangle, Stethoscope, Heart, Wrench,
   AlertOctagon, Clock, Settings as SettingsIcon, LogOut, Menu, Power,
   ChevronLeft, ChevronRight,
-  HelpCircle, FileText, Calendar, ClipboardCheck, Wifi, WifiOff
+  HelpCircle, FileText, Calendar, ClipboardCheck, Wifi, WifiOff, ShieldCheck
 } from 'lucide-react';
 import { UserPermissions } from '@/types';
 import { useAuthStore } from '@/src/store/authStore';
@@ -29,6 +29,8 @@ import HolidayRegistry from './HolidayRegistry';
 import MissingRecords from './MissingRecords';
 import DailyRounds from './DailyRounds';
 import FlightRecords from './FlightRecords';
+import ZooCompliance from './ZooCompliance';
+import HelpCenter from './HelpCenter';
 
 interface LayoutProps {
   activeView: string;
@@ -153,6 +155,8 @@ const Layout: React.FC<LayoutProps> = ({ activeView, onNavigate, fontScale, setF
         return <Reports />;
       case 'missing':
         return <MissingRecords />;
+      case 'compliance':
+        return <ZooCompliance />;
       case 'settings':
         return <Settings />;
       case 'help':
@@ -165,8 +169,8 @@ const Layout: React.FC<LayoutProps> = ({ activeView, onNavigate, fontScale, setF
   const sidebarContent = (
     <div className={`flex flex-col h-full bg-[#1c1c1e] text-slate-300 transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'} no-print shadow-xl md:shadow-none`}>
       <div className={`h-14 flex items-center ${isSidebarCollapsed ? 'justify-center' : 'justify-between px-4'} border-b border-slate-800`}>
-        {!isSidebarCollapsed && <span className="font-bold text-white tracking-tight">KOA Manager</span>}
-        <img src={orgProfile?.logoUrl || '/koa-logo.png'} alt="Logo" className="w-8 h-8 object-contain rounded-lg bg-white/10" />
+        {!isSidebarCollapsed && <span className="font-bold text-white tracking-tight">ZooGuard</span>}
+        <img src={orgProfile?.logo_url || '/koa-logo.png'} alt="Logo" className="w-8 h-8 object-contain rounded-lg bg-white/10" />
       </div>
       <div className={`px-4 py-2 border-b border-slate-800/50 flex items-center gap-2 ${!isOnline ? 'bg-rose-900/20' : 'bg-emerald-900/10'}`}>
         {isOnline ? <Wifi size={14} className="text-emerald-500" /> : <WifiOff size={14} className="text-rose-500" />}
@@ -199,6 +203,7 @@ const Layout: React.FC<LayoutProps> = ({ activeView, onNavigate, fontScale, setF
         <NavItem view="holidays" icon={Calendar} label="Holiday Registry" permission={p.attendance} />
 
         <SectionHeader title="Compliance" />
+        <NavItem view="compliance" icon={ShieldCheck} label="Zoo Licensing Act" permission={true} />
         <NavItem view="reports" icon={FileText} label="Reports" permission={p.reports} />
         <NavItem view="missing" icon={ShieldAlert} label="Missing Records" permission={p.missingRecords} />
 
@@ -215,7 +220,7 @@ const Layout: React.FC<LayoutProps> = ({ activeView, onNavigate, fontScale, setF
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-white truncate text-left">{currentUser?.name || 'Unknown'}</p>
-                <p className="text-[9px] font-black text-emerald-500 truncate uppercase tracking-widest text-left">{currentUser?.jobPosition || currentUser?.role || 'Guest'}</p>
+                <p className="text-[9px] font-black text-emerald-500 truncate uppercase tracking-widest text-left">{currentUser?.job_position || currentUser?.role || 'Guest'}</p>
               </div>
               <button onClick={handleLogout} className="text-slate-500 hover:text-red-400 transition-colors"><LogOut size={16}/></button>
             </div>
@@ -266,7 +271,7 @@ const Layout: React.FC<LayoutProps> = ({ activeView, onNavigate, fontScale, setF
           <button onClick={() => setIsMobileMenuOpen(true)} className="text-slate-300 p-2 -ml-2 hover:bg-slate-800 rounded-lg transition-colors">
             <Menu size={24} />
           </button>
-          <span className="text-sm font-bold text-white">KOA Manager</span>
+          <span className="text-sm font-bold text-white">ZooGuard</span>
           <div className="w-7 h-7 bg-slate-700 rounded-full flex items-center justify-center font-black text-[10px] text-white border border-slate-600">{currentUser?.initials || '--'}</div>
         </header>
         <div className="flex-1 overflow-y-auto bg-slate-200 print:bg-white print:overflow-visible safe-area-pb">

@@ -157,5 +157,16 @@ export const REPORT_SCHEMAS: Record<string, ReportSchema> = {
       { label: 'Due', width: '15%', accessor: 'due' },
       { label: 'Check', width: '5%', accessor: 'check' }
     ]
+  },
+  CONSERVATION_EDUCATION: {
+    id: 'CONSERVATION_EDUCATION',
+    title: 'Conservation & Education Log',
+    columns: [
+      { label: 'Date', width: '15%', accessor: 'date' },
+      { label: 'Type', width: '15%', accessor: 'type' },
+      { label: 'Activity Name', width: '25%', accessor: 'title' },
+      { label: 'Description / Impact', width: '35%', accessor: 'description' },
+      { label: 'Staff', width: '10%', accessor: 'initials' }
+    ]
   }
 };

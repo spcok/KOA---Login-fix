@@ -34,6 +34,8 @@ export enum LogType {
   GENERAL = 'General',
   MOVEMENT = 'Movement',
   EVENT = 'Event',
+  CONSERVATION = 'Conservation',
+  EDUCATION = 'Education',
   AUDIT = 'Audit' // Added for audit trail logging
 }
 
@@ -226,8 +228,8 @@ export interface Animal extends BaseEntity {
   water_type?: string; // e.g., 'Tap', 'RO', 'Distilled'
   
   // Denormalized for quick access, actual logs are in LogEntry table
-  logs: LogEntry[]; 
-  documents: GlobalDocument[];
+  logs?: LogEntry[]; 
+  documents?: GlobalDocument[];
   
   archived: boolean; // Made mandatory
   is_quarantine: boolean; // Renamed and made mandatory
@@ -409,6 +411,9 @@ export interface OrganisationProfile extends BaseEntity {
   address: string;
   licence_number: string; // Renamed for consistency and compliance
   licence_expiry_date?: Date; // Added for compliance
+  local_authority?: string; // Added for compliance
+  last_inspection_date?: Date; // Added for compliance
+  next_inspection_date?: Date; // Added for compliance
   contact_email: string; // Renamed for consistency
   contact_phone: string; // Renamed for consistency
   logo_url?: string; // Renamed and made optional
@@ -448,6 +453,16 @@ export interface LocalBackupEntry extends BaseEntity {
   backup_date: Date; // Renamed and changed to Date object
   size_bytes: number; // Renamed and added unit suffix
   file_path: string; // Path to the backup file (e.g., in IndexedDB or local storage)
+}
+
+export interface StaffTraining extends BaseEntity {
+  user_id: string;
+  training_name: string;
+  completion_date: Date;
+  expiry_date?: Date;
+  certificate_url?: string;
+  notes?: string;
+  status: 'Valid' | 'Expired' | 'Pending';
 }
 
 export interface WeatherData {

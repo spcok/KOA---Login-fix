@@ -1,8 +1,8 @@
 
 {
-  "short_name": "KOA Manager",
-  "name": "Kent Owl Academy Management System",
-  "id": "koa-manager",
+  "short_name": "ZooGuard",
+  "name": "ZooGuard: Zoo Licensing Act 1981 Compliance System",
+  "id": "zooguard",
   "icons": [
     {
       "src": "/logo.png",

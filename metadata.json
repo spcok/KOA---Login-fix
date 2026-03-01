@@ -1,6 +1,6 @@
 {
-  "name": "Remix: Remix: KOA Manager -Phased rebuild - settings fix",
-  "description": "Comprehensive management system for Kent Owl Academy tracking animal weights, feeds, and health with AI insights.",
+  "name": "koa-system- settings fix",
+  "description": "A comprehensive management and compliance system designed to ensure zoos meet the requirements of the Zoo Licensing Act 1981, including conservation, education, and animal welfare standards.",
   "requestFramePermissions": [
     "camera"
   ]

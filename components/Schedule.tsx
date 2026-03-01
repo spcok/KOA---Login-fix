@@ -370,7 +370,7 @@ const Schedule: React.FC = () => {
                                 className="bg-transparent text-sm font-medium text-slate-700 border-none focus:ring-0 cursor-pointer w-full"
                              >
                                  <option value="ALL">All Animals</option>
-                                 {animals.map((a: Animal) => <option key={a.id} value={a.id}>{a.name} ({a.species})</option>)}
+                                {(animals || []).map((a: Animal) => <option key={a.id} value={a.id}>{a.name} ({a.species})</option>)}
                              </select>
                          </div>
                     </div>

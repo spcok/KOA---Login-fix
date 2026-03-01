@@ -1,7 +1,7 @@
 
 {
   "appId": "com.kentowlacademy.manager",
-  "appName": "KOA Manager",
+  "appName": "ZooGuard",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"

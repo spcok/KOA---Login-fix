@@ -187,7 +187,7 @@ const Tasks: React.FC = () => {
                                     <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Assigned To
                                     <select value={newAssignedTo} onChange={e => { if(newAssignedTo !== e.target.value) setNewAssignedTo(e.target.value); }} className={inputClass}>
                                         <option value="">Unassigned</option>
-                                        {users.map((u: User) => <option key={u.id} value={u.id}>{u.name} ({u.initials})</option>)}
+                                        {(users || []).map((u: User) => <option key={u.id} value={u.id}>{u.name} ({u.initials})</option>)}
                                     </select>
                                     </label>
                                 </div>
@@ -211,10 +211,9 @@ const Tasks: React.FC = () => {
 
         {showEntryModal && selectedAnimalForEntry && (
             <AddEntryModal isOpen={showEntryModal} onClose={() => setShowEntryModal(false)} onSave={(entry) => {
-                updateAnimal?.({ ...selectedAnimalForEntry, logs: [entry, ...selectedAnimalForEntry.logs] });
                 updateTask({ ...completingTask!, completed: true });
                 setShowEntryModal(false);
-            }} animal={selectedAnimalForEntry} initialType={completingTask?.type || LogType.HEALTH} foodOptions={{} as any} feedMethods={[]}/>
+            }} animal={selectedAnimalForEntry} initialType={completingTask?.task_type || LogType.GENERAL} foodOptions={{} as any} feedMethods={[]}/>
         )}
     </div>
   );

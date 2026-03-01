@@ -16,6 +16,8 @@ export const DEFAULT_LOCAL_BACKUP_CONFIG: any = {
   retention_count: 7
 };
 
+export const SYSTEM_ANIMAL_ID = '00000000-0000-0000-0000-000000000000';
+
 export const DEFAULT_FOOD_OPTIONS = {
   [AnimalCategory.OWLS]: ['Day Old Chick', 'Mouse', 'Rat', 'Quail', 'Rabbit'],
   [AnimalCategory.RAPTORS]: ['Day Old Chick', 'Mouse', 'Rat', 'Quail', 'Rabbit', 'Beef'],

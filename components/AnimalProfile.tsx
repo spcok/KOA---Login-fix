@@ -1,12 +1,13 @@
 
 import React, { useState, useMemo } from 'react';
 import { Animal, LogType, UserRole, LogEntry } from '@/types';
-import { ChevronLeft, Scale, Utensils, Printer, Edit, Trash2, AlertTriangle, Plus, Filter, Activity } from 'lucide-react';
+import { ChevronLeft, Scale, Utensils, Printer, Edit, Trash2, AlertTriangle, Plus, Filter, Activity, Archive, Skull, Truck } from 'lucide-react';
 import { formatWeightDisplay } from '@/src/services/weightUtils';
 import AddEntryModal from './AddEntryModal';
 import SignGenerator from './SignGenerator';
 import { useAppData } from '@/src/context/AppContext';
 import { useAuthStore } from '@/src/store/authStore';
+import { usePermissions } from '@/src/hooks/usePermissions';
 import AnimalFormModal from './AnimalFormModal';
 import { IUCNBadge } from './IUCNBadge';
 
@@ -17,10 +18,11 @@ interface AnimalProfileProps {
 
 const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
   const { profile: currentUser } = useAuthStore();
+  const { isAdmin, isStaff } = usePermissions();
   const { 
     log_entries,
     addLogEntry,
-    deleteAnimal, 
+    archiveAnimal,
     orgProfile, 
     foodOptions, 
     feedMethods, 
@@ -34,13 +36,22 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
   const [isSignGeneratorOpen, setIsSignGeneratorOpen] = useState(false);
   const [isAddEntryOpen, setIsAddEntryOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [archiveForm, setArchiveForm] = useState<{ reason: string, type: 'Disposition' | 'Death' }>({
+    reason: '',
+    type: 'Disposition'
+  });
   const [entryType, setEntryType] = useState<LogType>(LogType.GENERAL);
 
-  const handleDelete = () => {
-      if (window.confirm(`Are you sure you want to delete ${animal.name}? This cannot be undone.`)) {
-          deleteAnimal(animal.id);
-          onBack();
-      }
+  const handleArchive = async () => {
+    if (!archiveForm.reason) return;
+    try {
+      await archiveAnimal(animal.id, archiveForm.reason, archiveForm.type);
+      setIsArchiveModalOpen(false);
+      onBack();
+    } catch (err) {
+      console.error("Failed to archive animal:", err);
+    }
   };
 
   const age = useMemo(() => {
@@ -51,7 +62,7 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
   }, [animal.dob]);
 
   const animalLogs = useMemo(() => {
-    return log_entries.filter((log) => String(log.animal_id) === String(animal.id));
+    return (log_entries || []).filter((log) => String(log.animal_id) === String(animal.id));
   }, [log_entries, animal.id]);
 
   const sortedLogs = useMemo(() => {
@@ -102,9 +113,9 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
                 <button onClick={() => setIsEditProfileOpen(true)} className="p-2 text-slate-400 hover:text-emerald-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all" title="Edit Profile">
                     <Edit size={16} />
                 </button>
-                {currentUser?.role !== UserRole.KEEPER && (
-                    <button onClick={handleDelete} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all" title="Delete Record">
-                        <Trash2 size={16} />
+                {isStaff && (
+                    <button onClick={() => setIsArchiveModalOpen(true)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all" title="Archive Subject (Disposition/Death)">
+                        <Archive size={16} />
                     </button>
                 )}
             </div>
@@ -170,7 +181,7 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
                                     </h4>
                                     {animal.critical_husbandry_notes && animal.critical_husbandry_notes.length > 0 ? (
                                         <ul className="space-y-2">
-                                            {animal.critical_husbandry_notes.map((note, idx) => (
+                                            {(animal.critical_husbandry_notes || []).map((note, idx) => (
                                                 <li key={idx} className="flex items-start gap-2 text-xs font-bold text-slate-700">
                                                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
                                                     {note}
@@ -386,7 +397,7 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
         {isSignGeneratorOpen && (
             <SignGenerator 
                 animal={animal}
-                orgProfile={orgProfile}
+                orgProfile={orgProfile || null}
                 onClose={() => setIsSignGeneratorOpen(false)}
             />
         )}
@@ -403,9 +414,6 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
             <AddEntryModal 
                 isOpen={isAddEntryOpen}
                 onClose={() => setIsAddEntryOpen(false)}
-                onSave={(entry) => {
-                    addLogEntry(entry as LogEntry, animal.id);
-                }}
                 animal={animal}
                 initialType={entryType}
                 foodOptions={foodOptions}
@@ -413,6 +421,73 @@ const AnimalProfile: React.FC<AnimalProfileProps> = ({ animal, onBack }) => {
                 eventTypes={eventTypes}
                 allAnimals={animals}
             />
+        )}
+
+        {/* ARCHIVE MODAL */}
+        {isArchiveModalOpen && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+                <div className="bg-white rounded-[2rem] w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+                    <div className="p-8 space-y-6">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-100">
+                                <Archive size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Archive Subject</h3>
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Formal Disposition Registry</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Archive Type</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button 
+                                        onClick={() => setArchiveForm(prev => ({ ...prev, type: 'Disposition' }))}
+                                        className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 transition-all ${archiveForm.type === 'Disposition' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-100 text-slate-400'}`}
+                                    >
+                                        <Truck size={16} />
+                                        <span className="text-xs font-black uppercase tracking-widest">Disposition</span>
+                                    </button>
+                                    <button 
+                                        onClick={() => setArchiveForm(prev => ({ ...prev, type: 'Death' }))}
+                                        className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 transition-all ${archiveForm.type === 'Death' ? 'border-rose-500 bg-rose-50 text-rose-700' : 'border-slate-100 text-slate-400'}`}
+                                    >
+                                        <Skull size={16} />
+                                        <span className="text-xs font-black uppercase tracking-widest">Death</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Reason / Details</label>
+                                <textarea 
+                                    value={archiveForm.reason}
+                                    onChange={(e) => setArchiveForm(prev => ({ ...prev, reason: e.target.value }))}
+                                    placeholder={archiveForm.type === 'Death' ? "Cause of death, circumstances, disposal method..." : "Transfer destination, loan details, sale information..."}
+                                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 text-sm font-medium focus:border-emerald-500 transition-all outline-none min-h-[120px]"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 pt-4">
+                            <button 
+                                onClick={() => setIsArchiveModalOpen(false)}
+                                className="flex-1 py-4 text-xs font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={handleArchive}
+                                disabled={!archiveForm.reason}
+                                className="flex-1 bg-slate-900 text-white py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50"
+                            >
+                                Commit to Archive
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         )}
     </div>
   );
